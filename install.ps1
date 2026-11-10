@@ -13,9 +13,10 @@
     gemini   ~/.gemini/skills
     copilot  ~/.copilot/skills
     windsurf ~/.codeium/windsurf/skills
+    deepseek ~/.dsh/skills（DeepSeek Harness；也原生读 ~/.agents/skills）
 
 .PARAMETER Target
-  all | auto | claude | trae | cursor | codex | cline | gemini | copilot | windsurf
+  all | auto | claude | trae | cursor | codex | cline | gemini | copilot | windsurf | deepseek
   可写多个：-Target claude,cursor；默认 auto（只装检测到的工具）。
 
 .EXAMPLE
@@ -101,6 +102,11 @@ $Specs['windsurf'] = @{
     Label  = 'Windsurf'
     Dir    = Join-Path $UserHome '.codeium\windsurf\skills'
     Detect = @((Join-Path $UserHome '.codeium\windsurf'))
+}
+$Specs['deepseek'] = @{
+    Label  = 'DeepSeek Harness'
+    Dir    = Join-Path $UserHome '.dsh\skills'
+    Detect = @((Join-Path $UserHome '.dsh'))
 }
 
 function Install-Skills {

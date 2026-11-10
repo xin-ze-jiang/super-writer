@@ -14,7 +14,7 @@
 
 ## 2. 安装
 
-技能目录位置：Claude Code 是 `~/.claude/skills/`（Windows 为 `%USERPROFILE%\.claude\skills\`）。下面命令按 Claude Code 写；Cursor、Cline、Gemini CLI、Copilot、Windsurf、Codex、Trae 的路径见第 3 节对照表，把目录换掉即可。
+技能目录位置：Claude Code 是 `~/.claude/skills/`（Windows 为 `%USERPROFILE%\.claude\skills\`）。下面命令按 Claude Code 写；Cursor、Cline、Gemini CLI、Copilot、Windsurf、Codex、DeepSeek、Trae 的路径见第 3 节对照表，把目录换掉即可。
 
 ### 方式 A：git clone（推荐，方便更新）
 
@@ -69,9 +69,9 @@ Get-ChildItem "$HOME\.claude\skills\latex-paper"
 
 技能在**新建对话**时扫描加载，装完需要开个新对话才生效。
 
-## 3. 跨工具安装（Claude Code / Cursor / Codex / Cline / Gemini / Copilot / Windsurf）
+## 3. 跨工具安装（Claude Code / Cursor / Codex / Cline / Gemini / Copilot / Windsurf / DeepSeek）
 
-super-writer 的技能就是标准 `SKILL.md` 目录：Claude Code、Trae、Cursor、Cline、Gemini CLI、GitHub Copilot、Windsurf 都能直接读，安装动作就是把整个技能目录复制到对应位置（`scripts/`、`templates/`、`references/` 一起带走）。OpenAI Codex CLI 以 `AGENTS.md` 为主，脚本会额外追加索引并把技能放到 `~/.agents/skills/`（多工具共用目录）。
+super-writer 的技能就是标准 `SKILL.md` 目录：Claude Code、DeepSeek Harness、Trae、Cursor、Cline、Gemini CLI、GitHub Copilot、Windsurf 都能直接读，安装动作就是把整个技能目录复制到对应位置（`scripts/`、`templates/`、`references/` 一起带走）。OpenAI Codex CLI 以 `AGENTS.md` 为主，脚本会额外追加索引并把技能放到 `~/.agents/skills/`（多工具共用目录）。
 
 一条命令装完：
 
@@ -88,7 +88,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Target all
 ./install.sh --target claude,cursor # 指定多个
 ```
 
-`-Target` / `--target` 取值：`all`、`auto`（默认）、`claude`、`trae`、`cursor`、`codex`、`cline`、`gemini`、`copilot`、`windsurf`。`auto` 按配置目录是否存在判断，会打印装到哪、跳过哪些；重复执行原地覆盖，不产生重复目录；`output/`、`out/`、`__pycache__/` 等本地产物不会被复制。
+`-Target` / `--target` 取值：`all`、`auto`（默认）、`claude`、`trae`、`cursor`、`codex`、`cline`、`gemini`、`copilot`、`windsurf`、`deepseek`。`auto` 按配置目录是否存在判断，会打印装到哪、跳过哪些；重复执行原地覆盖，不产生重复目录；`output/`、`out/`、`__pycache__/` 等本地产物不会被复制。
 
 | 工具 | 安装路径（用户级） | 方式 | 脚本还是手动 |
 |---|---|---|---|
@@ -100,6 +100,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Target all
 | Gemini CLI | `~/.gemini/skills/<技能名>/` | 复制整个技能目录 | 脚本 |
 | GitHub Copilot | `~/.copilot/skills/<技能名>/` | 复制整个技能目录 | 脚本 |
 | Windsurf | `~/.codeium/windsurf/skills/<技能名>/` | 复制整个技能目录 | 脚本 |
+| DeepSeek Harness | `~/.dsh/skills/<技能名>/`（也原生读 `~/.agents/skills/`） | 复制整个技能目录 | 脚本 |
 
 项目级（只对当前仓库生效）需要手动放单文件规则，文件在 `adapters/`：
 

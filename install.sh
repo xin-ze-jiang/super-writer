@@ -8,7 +8,7 @@
 #   ./install.sh claude                # 位置参数等价于 --target
 #   ./install.sh --home /tmp/testhome  # 覆盖用户主目录（测试用）
 #
-# 支持：trae claude cursor codex cline gemini copilot windsurf
+# 支持：trae claude cursor codex cline gemini copilot windsurf deepseek
 set -euo pipefail
 
 TARGET="auto"
@@ -38,7 +38,7 @@ if [ ! -d "$REPO/skills" ]; then
   exit 1
 fi
 
-ALL_NAMES="trae claude cursor codex cline gemini copilot windsurf"
+ALL_NAMES="trae claude cursor codex cline gemini copilot windsurf deepseek"
 
 label_for() {
   case "$1" in
@@ -50,6 +50,7 @@ label_for() {
     gemini) echo "Gemini CLI" ;;
     copilot) echo "GitHub Copilot" ;;
     windsurf) echo "Windsurf" ;;
+    deepseek) echo "DeepSeek Harness" ;;
   esac
 }
 
@@ -65,6 +66,7 @@ dir_for() {
     gemini) echo "$HOME_DIR/.gemini/skills" ;;
     copilot) echo "$HOME_DIR/.copilot/skills" ;;
     windsurf) echo "$HOME_DIR/.codeium/windsurf/skills" ;;
+    deepseek) echo "$HOME_DIR/.dsh/skills" ;;
   esac
 }
 
@@ -73,6 +75,7 @@ detect_paths() {
     trae) echo "$HOME_DIR/.trae-cn $HOME_DIR/.trae" ;;
     codex) echo "$HOME_DIR/.codex" ;;
     windsurf) echo "$HOME_DIR/.codeium/windsurf" ;;
+    deepseek) echo "$HOME_DIR/.dsh" ;;
     *) echo "$HOME_DIR/.$1" ;;
   esac
 }

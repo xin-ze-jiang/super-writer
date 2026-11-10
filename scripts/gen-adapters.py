@@ -196,6 +196,19 @@ def build_files(skills):
         + "## 完整版\n\n" + index + "\n"
     )
 
+    out["deepseek/README.md"] = (
+        "# super-writer 与 DeepSeek Harness\n\n" + HEADER_NOTE + "\n" +
+        "DeepSeek Harness（`dsh`）原生读取 `SKILL.md` 技能目录，**不需要额外的规则文件**，\n"
+        "本文件只说明放置位置。\n\n"
+        "放置（按 dsh 的发现优先级）：\n\n"
+        "- 项目：`<项目根>/.dsh/skills/<技能名>/`（第一优先），其次 `<项目根>/.agents/skills/`\n"
+        "- 用户级：`~/.dsh/skills/<技能名>/`（`install.ps1` / `install.sh --target deepseek` 装这里），其次 `~/.agents/skills/`\n\n"
+        "frontmatter 只要求 `name`（kebab-case）+ `description`，与现有 `SKILL.md` 完全兼容；\n"
+        "也支持根目录下平铺的 `<name>.md`，但嵌套子目录不会被发现。\n\n"
+        "验证：`npx @deepseek-ai/dsh web` 启动后，在 `/` 命令面板的 Skills 组里应能看到下列技能。\n\n" +
+        index + "\n"
+    )
+
     out["README.md"] = (
         "# super-writer · adapters/（各 AI 工具的适配文件）\n\n" + HEADER_NOTE + "\n" +
         "`SKILL.md` 是唯一内容源；本目录只是同一份内容的「换格式」产物，供不支持技能目录、\n"
@@ -208,7 +221,8 @@ def build_files(skills):
         "| `gemini/GEMINI.md` | `~/.gemini/GEMINI.md` 或项目根 | Gemini CLI 上下文 |\n"
         "| `copilot/copilot-instructions.md` | `.github/copilot-instructions.md` | Copilot 仓库级指令 |\n"
         "| `copilot/instructions/*.instructions.md` | `.github/instructions/` | Copilot 按文件类型定向指令 |\n"
-        "| `windsurf/rules-snippet.md` | `.windsurf/rules/` 或 `global_rules.md` | Windsurf Rules |\n\n"
+        "| `windsurf/rules-snippet.md` | `.windsurf/rules/` 或 `global_rules.md` | Windsurf Rules |\n"
+        "| `deepseek/README.md` | 不用投放（原生读技能目录） | DeepSeek Harness 放置说明 |\n\n"
         "重新生成：\n\n```bash\npython scripts/gen-adapters.py\n```\n"
     )
     return out

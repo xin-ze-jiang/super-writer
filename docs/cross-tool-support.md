@@ -21,12 +21,16 @@
 | GitHub Copilot | 项目级 | `.github/skills/`、`.claude/skills/`、`.agents/skills/` | `.github/copilot-instructions.md`、`AGENTS.md`、`.github/instructions/**/*.instructions.md` | 是 |
 | Windsurf | 用户级 | `~/.codeium/windsurf/skills/<name>/` | `~/.codeium/windsurf/memories/global_rules.md`（单文件、始终生效、≤6000 字符） | 技能可多目录；global_rules 只能一个文件 |
 | Windsurf | 项目级 | `.windsurf/skills/<name>/`、`.agents/skills/` | `.windsurf/rules/*.md`（单文件 ≤12000 字符）、任意 `AGENTS.md` | 是 |
+| DeepSeek Harness | 用户级 | `~/.dsh/skills/<name>/SKILL.md`（`$DSH_HOME/skills`），其次 `~/.agents/skills/` | 无独立规则文件（技能即规则） | 是：目录内可带 `references/`、`scripts/` |
+| DeepSeek Harness | 项目级 | `<项目根>/.dsh/skills/<name>/SKILL.md`（第一优先），其次 `.agents/skills/` | 无独立规则文件 | 是 |
 
 > Trae 没有公开的技能规范文档，表中路径按本机实际安装目录（`~/.trae-cn/skills/`、`~/.trae/skills/`）记录，不是查证来的。
+>
+> DeepSeek Harness（`dsh`）为 2026-08 发布的开发者预览，仍在演进；技能发现顺序为 `.dsh/skills` → `.agents/skills` → 自定义目录 → `~/.dsh/skills` → `~/.agents/skills`，只扫描根下直接子项，嵌套的 `**/SKILL.md` 不会被发现。
 
 ## 二、frontmatter 要求
 
-### 通用 SKILL.md（Claude Code / Cursor / Cline / Gemini / Copilot / Windsurf / Trae）
+### 通用 SKILL.md（Claude Code / Cursor / Cline / Gemini / Copilot / Windsurf / DeepSeek / Trae）
 
 ```yaml
 ---
@@ -35,7 +39,7 @@ description: 做什么 + 什么时候用   # 必填，建议 <1024 字符，不�
 ---
 ```
 
-其余字段（`license`、`allowed-tools`、`disable-model-invocation` 等）均为可选，各工具支持程度不一，super-writer 只用 `name` + `description`，保证全平台可读。
+其余字段（`license`、`allowed-tools`、`disable-model-invocation` 等）均为可选，各工具支持程度不一，super-writer 只用 `name` + `description`，保证全平台可读。DeepSeek Harness 额外认 `whenToUse`、`metadata`、`disable-model-invocation`、`user-invocable`，全为可选。
 
 ### 各单文件格式
 
@@ -52,9 +56,9 @@ description: 做什么 + 什么时候用   # 必填，建议 <1024 字符，不�
 ## 三、super-writer 据此采用的策略
 
 1. **`skills/*/SKILL.md` 是唯一内容源**，不维护第二份正文。
-2. **6/7 个工具原生支持 SKILL.md 目录**（Claude、Trae、Cursor、Cline、Gemini、Copilot、Windsurf），所以安装脚本的主动作是**复制整个技能目录**，脚本、模板、references 一起带过去。
+2. **7/8 个工具原生支持 SKILL.md 目录**（Claude、DeepSeek、Trae、Cursor、Cline、Gemini、Copilot、Windsurf），所以安装脚本的主动作是**复制整个技能目录**，脚本、模板、references 一起带过去。
 3. Codex 以 `AGENTS.md` 为主，安装时额外把索引追加进 `~/.codex/AGENTS.md`，并把技能复制到 `~/.agents/skills/`（多工具共用目录）。
-4. `adapters/` 只放**换格式的索引文件**（Cursor `.mdc`、`AGENTS.md`、`GEMINI.md`、Cline 规则、Copilot 指令、Windsurf 片段），由 `scripts/gen-adapters.py` 从 SKILL.md 提取「何时用 / 关键命令 / 产物」生成，不复制正文。
+4. `adapters/` 只放**换格式的索引文件**（Cursor `.mdc`、`AGENTS.md`、`GEMINI.md`、Cline 规则、Copilot 指令、Windsurf 片段、DeepSeek 放置说明），由 `scripts/gen-adapters.py` 从 SKILL.md 提取「何时用 / 关键命令 / 产物」生成，不复制正文。
 
 ## 四、来源
 
@@ -71,3 +75,6 @@ description: 做什么 + 什么时候用   # 必填，建议 <1024 字符，不�
 - Copilot 技能路径（工作区/个人）：<https://learn.microsoft.com/visualstudio/ide/copilot-agent-skills>
 - Windsurf Rules / Memories：<https://docs.windsurf.com/windsurf/cascade/memories>
 - Windsurf Skills：<https://docs.windsurf.com/windsurf/cascade/skills>
+- DeepSeek Harness 官网：<https://www.deepseek.com/harness/en/>
+- DeepSeek Harness 仓库（MIT，持续更新）：<https://github.com/deepseek-ai/deepseek-harness>
+- DeepSeek 技能发现根与格式（`@deepseek-ai/dsh-skill-filesystem`）：<https://github.com/deepseek-ai/deepseek-harness/tree/master/packages/skill/skill-filesystem>、<https://www.npmjs.com/package/@deepseek-ai/dsh-skill-filesystem>
