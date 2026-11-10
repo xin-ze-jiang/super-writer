@@ -14,7 +14,7 @@
 
 ## 2. 安装
 
-技能目录位置：Trae 国内版是 `~/.trae-cn/skills/`（Windows 为 `%USERPROFILE%\.trae-cn\skills\`），国际版是 `~/.trae/skills/`。下面命令按国内版写。
+技能目录位置：Claude Code 是 `~/.claude/skills/`（Windows 为 `%USERPROFILE%\.claude\skills\`）。下面命令按 Claude Code 写；Cursor、Cline、Gemini CLI、Copilot、Windsurf、Codex、Trae 的路径见第 3 节对照表，把目录换掉即可。
 
 ### 方式 A：git clone（推荐，方便更新）
 
@@ -23,7 +23,7 @@ git clone https://github.com/xin-ze-jiang/super-writer.git
 cd super-writer
 ```
 
-克隆下来只是仓库，还要按方式 C 把技能目录复制进 Trae 的技能目录。
+克隆下来只是仓库，还要按方式 C 把技能目录复制进 AI 工具的技能目录。
 
 ### 方式 B：下载 ZIP 解压
 
@@ -35,35 +35,35 @@ cd super-writer
 
 ```powershell
 # Windows PowerShell
-Copy-Item -Recurse .\skills\latex-paper "$HOME\.trae-cn\skills\"
+Copy-Item -Recurse .\skills\latex-paper "$HOME\.claude\skills\"
 ```
 
 ```bash
 # macOS / Linux
-mkdir -p ~/.trae-cn/skills
-cp -R skills/latex-paper ~/.trae-cn/skills/
+mkdir -p ~/.claude/skills
+cp -R skills/latex-paper ~/.claude/skills/
 ```
 
 三个都装：
 
 ```powershell
 # Windows
-New-Item -ItemType Directory -Force "$HOME\.trae-cn\skills" | Out-Null
+New-Item -ItemType Directory -Force "$HOME\.claude\skills" | Out-Null
 'latex-paper','sj-ppt','promptlab' | ForEach-Object {
-  Copy-Item -Recurse ".\skills\$_" "$HOME\.trae-cn\skills\" -Force
+  Copy-Item -Recurse ".\skills\$_" "$HOME\.claude\skills\" -Force
 }
 ```
 
 ```bash
 # macOS / Linux
-mkdir -p ~/.trae-cn/skills
-cp -R skills/latex-paper skills/sj-ppt skills/promptlab ~/.trae-cn/skills/
+mkdir -p ~/.claude/skills
+cp -R skills/latex-paper skills/sj-ppt skills/promptlab ~/.claude/skills/
 ```
 
 装完检查一下（`SKILL.md` 必须直接在技能目录根下，不能多套一层）：
 
 ```powershell
-Get-ChildItem "$HOME\.trae-cn\skills\latex-paper"
+Get-ChildItem "$HOME\.claude\skills\latex-paper"
 # 期望看到：SKILL.md  templates  scripts  references
 ```
 
@@ -152,7 +152,7 @@ python scripts/gen-adapters.py --check   # 只检查是否过期
 **最小可用命令**（`$Skill` 指技能安装目录）：
 
 ```powershell
-$Skill = Join-Path $HOME '.trae-cn\skills\latex-paper'
+$Skill = Join-Path $HOME '.claude\skills\latex-paper'
 
 # 1) 自检：编译全部 10 套模板，看谁报错
 powershell -NoProfile -ExecutionPolicy Bypass -File "$Skill\scripts\build.ps1" -All -Parse
@@ -175,7 +175,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "$Skill\scripts\build.ps1" '
 **最小可用命令**（在技能目录下执行）：
 
 ```powershell
-cd "$HOME\.trae-cn\skills\sj-ppt"
+cd "$HOME\.claude\skills\sj-ppt"
 
 # 生成 HTML（先用自带的示例 deck.json 试跑）
 node scripts/build_html.mjs examples/deck.json out/index.html
@@ -204,7 +204,7 @@ pip install python-pptx lxml
 **最小可用命令**：
 
 ```powershell
-cd "$HOME\.trae-cn\skills\promptlab"
+cd "$HOME\.claude\skills\promptlab"
 
 # 直接查一段提示词
 python scripts/check_prompt.py -p "黄昏的旧书店，木质书架，暖黄灯光，胶片质感，画幅 3:4"
@@ -266,15 +266,15 @@ cd D:\tools\super-writer
 git pull
 
 # 2) 重新覆盖复制一次（Windows 用 robocopy，/E 表示含子目录，会覆盖旧文件）
-robocopy .\skills\latex-paper "$HOME\.trae-cn\skills\latex-paper" /E
-robocopy .\skills\sj-ppt      "$HOME\.trae-cn\skills\sj-ppt"      /E
-robocopy .\skills\promptlab   "$HOME\.trae-cn\skills\promptlab"   /E
+robocopy .\skills\latex-paper "$HOME\.claude\skills\latex-paper" /E
+robocopy .\skills\sj-ppt      "$HOME\.claude\skills\sj-ppt"      /E
+robocopy .\skills\promptlab   "$HOME\.claude\skills\promptlab"   /E
 ```
 
 ```bash
 # macOS / Linux
 cd ~/tools/super-writer && git pull
-cp -Rf skills/latex-paper skills/sj-ppt skills/promptlab ~/.trae-cn/skills/
+cp -Rf skills/latex-paper skills/sj-ppt skills/promptlab ~/.claude/skills/
 ```
 
 复制完开新对话生效。注意 `cp -R` 不会删掉旧版本里已删除的文件，要彻底干净就先删技能目录再复制。

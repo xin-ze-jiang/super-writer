@@ -10,7 +10,7 @@
 先进入技能目录（任意位置 `cd` 过去即可），用相对路径跑：
 
 ```bash
-cd ~/.trae-cn/skills/promptlab
+cd ~/.claude/skills/promptlab
 python scripts/check_prompt.py -p "你的提示词"
 python scripts/check_prompt.py -f prompt.txt
 python scripts/check_prompt.py -b prompts.txt

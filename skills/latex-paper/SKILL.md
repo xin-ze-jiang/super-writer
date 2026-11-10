@@ -24,7 +24,7 @@ description: "LaTeX 论文排版：10 套现成模板（中文课程论文/实�
 └─ output\                  产物：<文件夹名>.pdf / <文件夹名>.log（首次运行自动创建）
 ```
 
-`<技能目录>` 指本技能所在目录，安装后通常是 `~/.trae-cn/skills/latex-paper`（Windows 为 `%USERPROFILE%\.trae-cn\skills\latex-paper`）。
+`<技能目录>` 指本技能所在目录，安装在 Claude Code 用户级时通常是 `~/.claude/skills/latex-paper`（Windows 为 `%USERPROFILE%\.claude\skills\latex-paper`）；其他工具按其各自的技能目录放，见仓库 README 的工具对照表。
 
 引擎：TeX Live 2026（full scheme），`xelatex` / `bibtex` / `biber` 必须在 PATH 中能被找到。
 
@@ -58,7 +58,7 @@ description: "LaTeX 论文排版：10 套现成模板（中文课程论文/实�
 
 1. **复制模板到作业目录**（不要直接改底稿）
    ```powershell
-   $Skill = Join-Path $HOME '.trae-cn\skills\latex-paper'
+   $Skill = Join-Path $HOME '.claude\skills\latex-paper'
    $src   = Join-Path $Skill 'templates\cn-cumcm'
    $dst   = 'D:\作业\数模国赛_2026'          # 换成你自己的作业目录
    New-Item -ItemType Directory -Path $dst -Force | Out-Null
