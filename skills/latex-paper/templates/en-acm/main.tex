@@ -1,0 +1,101 @@
+% !TeX program = xelatex
+% =============================================================
+% 模板 06：ACM SIGCONF 会议论文（acmart 官方文档类）
+% 编译： scripts\build.ps1 en-acm
+% 版式： 双栏，9 pt，官方 acmart.cls（TeX Live 自带）
+% 说明： 使用 nonacm 选项关闭版权块，投稿时删掉 nonacm 并补全 \acmConference 等信息
+% =============================================================
+\documentclass[sigconf,nonacm]{acmart}
+
+\usepackage{booktabs}
+\usepackage{amsmath}
+
+% 关闭 acmart 默认的页眉页脚信息，得到干净的预览版
+\settopmatter{printfolios=true,printacmref=false}
+
+\begin{document}
+
+% ------------------------- 标题区（改这里） -------------------------
+\title{Placeholder Title: A Sample ACM SIGCONF Paper for Template Testing}
+
+\author{San Zhang}
+\affiliation{%
+  \institution{School of Computer Science, XX University}
+  \city{Beijing}
+  \country{China}}
+\email{zhangsan@example.edu.cn}
+
+\author{Si Li}
+\affiliation{%
+  \institution{School of Software, XX University}
+  \city{Beijing}
+  \country{China}}
+\email{lisi@example.edu.cn}
+
+\renewcommand{\shortauthors}{Zhang and Li}
+
+\begin{abstract}
+This is the placeholder abstract for an ACM SIGCONF paper. It shows the acmart
+title block, abstract, CCS concepts, a numbered equation, a table, and a BibTeX
+reference list. Replace the text with a 150--250 word abstract of your own work.
+\end{abstract}
+
+\begin{CCSXML}
+<ccs2012>
+   <concept>
+       <concept_id>10010147.10010178</concept_id>
+       <concept_desc>Computing methodologies~Machine learning</concept_desc>
+       <concept_significance>300</concept_significance>
+   </concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[300]{Computing methodologies~Machine learning}
+\keywords{placeholder, template, acmart, sigconf}
+
+\maketitle
+
+\section{Introduction}
+This section is a placeholder introduction. State the problem, summarize prior
+work~\cite{vaswani2017attention}, and end with a short list of contributions.
+
+\section{Approach}
+Given an input sequence $\mathbf{x}=(x_1,\dots,x_n)$, the attention output is
+\begin{equation}
+  \mathrm{Attn}(\mathbf{x})=\operatorname{softmax}\!\left(\frac{\mathbf{Q}\mathbf{K}^{\top}}{\sqrt{d_k}}\right)\mathbf{V},
+  \label{eq:attn}
+\end{equation}
+where $\mathbf{Q},\mathbf{K},\mathbf{V}$ are the query, key and value matrices and
+$d_k$ is the key dimension. Equation~\eqref{eq:attn} is the equation placeholder.
+
+\section{Experiments}
+Table~\ref{tab:setup} lists the placeholder experimental configuration.
+
+\begin{table}[h]
+  \caption{Placeholder Experimental Configuration}
+  \label{tab:setup}
+  \centering
+  \begin{tabular}{lc}
+    \toprule
+    Item & Value \\
+    \midrule
+    Dataset      & Placeholder-1M \\
+    Optimizer    & Adam           \\
+    Learning rate& $3\times10^{-4}$ \\
+    Batch size   & 64             \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Results}
+The placeholder system improves accuracy by 2.1 points over the baseline, which
+follows the same direction as the results reported in~\cite{devlin2019bert}.
+
+\section{Conclusion}
+This template compiles with XeLaTeX and BibTeX using the official acmart class.
+Replace all placeholder content before submission.
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{refs}
+
+\end{document}

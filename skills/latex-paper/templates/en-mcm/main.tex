@@ -1,0 +1,148 @@
+% !TeX program = xelatex
+% =============================================================
+% 模板 07：MCM/ICM 美国大学生数学建模竞赛论文
+% 编译： scripts\build.ps1 en-mcm
+%
+% 格式依据：COMAP 官方《MCM/ICM Contest Instructions》与历年竞赛题面（2024--2026 沿用）：
+%          · 全英文，12 pt 字体，单倍行距，四边 1 英寸页边距
+%          · 第一页为 Summary Sheet（含 Team Control Number、Problem Chosen、摘要）
+%          · 全文（含 Summary Sheet）不超过 25 页，附录计入页数
+%          · 不需要封面、目录、承诺书（2016 年后已取消）
+% 偏差说明：COMAP 只提供 Word 版 Summary Sheet 模板，没有 .cls；本模板按上述要求
+%          手工实现，Summary Sheet 的表格线框与官方 Word 版略有差异。
+% =============================================================
+\documentclass[12pt,letterpaper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\usepackage{amsmath}
+% 公式字体与正文统一为 Times 风格（默认 Computer Modern 会与 Times 正文明显不搭）
+\usepackage{unicode-math}
+\setmathfont{TeX Gyre Termes Math}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage[hidelinks]{hyperref}
+
+\captionsetup{font=small,labelsep=colon}
+\captionsetup[table]{position=top}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+% 页脚居中页码
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+\begin{document}
+
+% ======================= 第 1 页：Summary Sheet =======================
+\thispagestyle{empty}
+
+\noindent
+\begin{tabular}{|p{0.34\textwidth}|p{0.30\textwidth}|p{0.30\textwidth}|}
+\hline
+\rule{0pt}{2.2em}Team Control Number & \multicolumn{2}{l|}{\rule{0pt}{2.2em}XXXXXXX} \\
+\hline
+\rule{0pt}{2.2em}Problem Chosen & \multicolumn{2}{l|}{\rule{0pt}{2.2em}A / B / C / D / E / F} \\
+\hline
+\multicolumn{3}{|l|}{\rule{0pt}{2.2em}2026 MCM/ICM Summary Sheet} \\
+\hline
+\end{tabular}
+
+\vspace{1.2em}
+
+\begin{center}
+  {\large\bfseries Placeholder Title: A Sample MCM/ICM Paper for Template Testing}
+\end{center}
+
+\vspace{0.5em}
+\begin{center}
+  {\bfseries Summary}
+\end{center}
+
+This is the placeholder summary. The summary sheet is the most important page of an
+MCM/ICM paper: it must state the problem, your modeling approach, the key numerical
+results, and the main conclusion in about 400--600 words, without equations or
+citations. Replace this paragraph with your own summary.
+
+\vspace{0.6em}
+\noindent\textbf{Keywords:} placeholder; mathematical modeling; MCM/ICM
+
+\newpage
+
+% ======================= 正文 =======================
+\section{Introduction}
+
+This section restates the problem in your own words, reviews the relevant
+background, and states the overall modeling framework. Cite related work with
+\verb|\cite{}|, for example~\cite{smith2023mcm}.
+
+\section{Assumptions and Justifications}
+
+\begin{enumerate}
+  \item The system is observed at hourly intervals; sub-hour fluctuations are averaged out.
+  \item Travel time between adjacent regions is proportional to distance and independent of traffic.
+  \item Demand follows a Poisson process with a time-varying rate.
+\end{enumerate}
+
+\section{Model Formulation}
+
+Let $x_i(t)$ be the state of region $i$ at time $t$ and $u_i(t)$ the control input.
+The dynamics are
+\begin{equation}
+  \frac{\mathrm{d}x_i}{\mathrm{d}t}=f_i\bigl(x_i(t),u_i(t)\bigr)+\sum_{j\in\mathcal{N}(i)}a_{ij}\bigl(x_j-x_i\bigr),
+  \label{eq:dynamics}
+\end{equation}
+where $\mathcal{N}(i)$ is the neighbor set and $a_{ij}$ is the coupling strength.
+Equation~\eqref{eq:dynamics} is the equation placeholder.
+
+Parameter values are summarized in Table~\ref{tab:params}.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Placeholder Parameter Values}
+  \label{tab:params}
+  \begin{tabular}{lcc}
+    \toprule
+    Parameter & Symbol & Value \\
+    \midrule
+    Coupling strength & $a_{ij}$ & 0.05 \\
+    Demand rate       & $\lambda$ & 12 veh/h \\
+    Horizon           & $T$      & 24 h \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Results}
+
+With the parameters in Table~\ref{tab:params}, the placeholder model reduces total
+waiting time by 18.7\% compared with the baseline policy, consistent with the
+findings in~\cite{smith2023mcm}.
+
+\section{Sensitivity Analysis}
+
+Varying $\lambda$ by $\pm20\%$ changes the objective by less than 6\%, so the
+conclusion is robust to demand estimation error.
+
+\section{Strengths and Weaknesses}
+
+The model is simple enough to be solved exactly and transparent enough to be
+explained in the summary. Its main weakness is the homogeneous-demand assumption.
+
+% ======================= 参考文献 =======================
+\bibliographystyle{unsrt}
+\bibliography{refs}
+
+\newpage
+\appendix
+\section{Appendix: Code}
+
+Placeholder appendix. Memo, code, and data sheets go here; they count toward the
+25-page limit.
+
+\end{document}

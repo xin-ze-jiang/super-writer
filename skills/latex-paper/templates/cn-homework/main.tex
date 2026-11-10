@@ -1,0 +1,90 @@
+% !TeX program = xelatex
+% =============================================================
+% 模板 03：中文通用课程作业（ctex + XeLaTeX + biblatex/biber）
+% 编译： scripts\build.ps1 cn-homework
+% 特点： 参考文献走 biber 后端（scripts\build.ps1 会自动识别 .bcf 并调用 biber）
+% 版式： A4，上下 2.54cm，左右 3.17cm，正文小四，1.5 倍行距
+% =============================================================
+\documentclass[UTF8,a4paper,zihao=-4,fontset=windows]{ctexart}
+
+\usepackage{geometry}
+\geometry{top=2.54cm,bottom=2.54cm,left=3.17cm,right=3.17cm}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{enumitem}
+
+% 参考文献：GB/T 7714-2015，biber 后端
+\usepackage[backend=biber,style=gb7714-2015]{biblatex}
+\addbibresource{refs.bib}
+
+\usepackage[hidelinks]{hyperref}
+
+\linespread{1.5}
+\pagestyle{plain}   % 页码居中页脚，不显示页眉
+\captionsetup{font=small,labelsep=quad}
+\captionsetup[table]{position=top}
+
+\ctexset{
+  section    = {format = \zihao{4}\heiti},
+  subsection = {format = \zihao{-4}\heiti}
+}
+
+\begin{document}
+
+% ------------------------- 标题区（改这里） -------------------------
+\begin{center}
+  {\zihao{3}\heiti 作业标题占位：第二章 电路分析方法 习题解答}\\[0.6em]
+  {\zihao{5} 张三\quad 2026000000\quad 电气工程及其自动化 2 班}
+\end{center}
+
+\vspace{0.4em}\hrule\vspace{0.8em}
+
+\section{题目}
+
+占位题目：如图（此处省略插图）所示电路，已知 $R_1=10\,\Omega$、$R_2=20\,\Omega$、$U_S=12\,\text{V}$，求各支路电流。
+
+\section{解题思路}
+
+采用节点电压法。以电路下端为参考节点，则上端节点电压 $U_n$ 满足
+\begin{equation}
+  \frac{U_n-U_S}{R_1}+\frac{U_n}{R_2}=0,
+  \label{eq:kcl}
+\end{equation}
+整理得
+\begin{equation}
+  U_n=\frac{U_S R_2}{R_1+R_2}.
+  \label{eq:solve}
+\end{equation}
+
+\section{计算过程}
+
+将 $U_S=12\,\text{V}$、$R_1=10\,\Omega$、$R_2=20\,\Omega$ 代入式~\eqref{eq:solve}，得 $U_n=8\,\text{V}$，各支路电流见表~\ref{tab:result}。
+
+\begin{table}[htbp]
+  \centering
+  \caption{各支路电流计算结果}
+  \label{tab:result}
+  \begin{tabular}{lccc}
+    \toprule
+    支路 & 电阻/$\Omega$ & 电压/V & 电流/A \\
+    \midrule
+    $R_1$ 支路 & 10 & 4  & 0.400 \\
+    $R_2$ 支路 & 20 & 8  & 0.400 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{结果讨论}
+
+计算结果表明两支路电流相等，与串联分压的结论一致\cite{zhang2024demo}；若考虑电源内阻，可用戴维南定理修正，方法见文献\cite{smith2023demo}。
+
+\section{小结}
+
+本题用节点电压法求解，核心是把基尔霍夫电流定律写成式~\eqref{eq:kcl} 的形式，再代数求解即可。
+
+\printbibliography[title={参考文献}]
+
+\end{document}

@@ -1,0 +1,155 @@
+% !TeX program = xelatex
+% =============================================================
+% 模板 04：全国大学生数学建模竞赛（CUMCM）论文
+% 编译： scripts\build.ps1 cn-cumcm
+%
+% 格式依据：全国大学生数学建模竞赛组委会《全国大学生数学建模竞赛论文格式规范》
+%          （2023 年修订版，2024--2025 年沿用），要点如下：
+%          · 白色 A4 纸，上下左右页边距各不少于 2.5 cm，左侧装订
+%          · 第一页为摘要专用页（标题、摘要、关键词），第二页起为正文
+%          · 页码位于页脚中部，从正文第一页开始用阿拉伯数字连续编号
+%          · 论文题目三号黑体，一级标题四号黑体居中，正文小四宋体，1.5 倍行距
+%          · 参考文献按 GB/T 7714-2015 著录
+% 偏差说明：官方未提供 .cls/.sty 文件，本模板为按上述规范手工实现的社区版式，
+%          与官方 Word 模板在行距取整、标题间距上可能有 1--2 pt 差异。
+% =============================================================
+\documentclass[UTF8,a4paper,zihao=-4,fontset=windows]{ctexart}
+
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm}
+\usepackage{fancyhdr}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{gbt7714}
+\usepackage[hidelinks]{hyperref}
+
+\linespread{1.5}
+\captionsetup{font=small,labelsep=quad}
+\captionsetup[table]{position=top}
+
+% 一级标题：四号黑体居中；二级标题：小四黑体
+\ctexset{
+  section    = {format = {\zihao{4}\heiti\centering}},
+  subsection = {format = {\zihao{-4}\heiti}}
+}
+
+% 页脚居中页码
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\zihao{5}\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+\begin{document}
+
+% ============ 第一页：摘要专用页（不编页码） ============
+\pagenumbering{gobble}
+\begin{center}
+  {\zihao{3}\heiti 占位题目：基于多目标优化的城市共享单车调度模型}\\[0.6em]
+\end{center}
+
+\vspace{0.4em}
+\begin{center}
+  {\zihao{4}\heiti 摘\quad 要}
+\end{center}
+
+本文针对城市共享单车调度问题，建立了以调度成本最小、用户满足率最大为目标的多目标优化模型。首先对附件数据进行清洗，得到各站点分时段的需求强度；其次用 K-means 对站点聚类，把 200 个站点归并为 12 个调度区域；最后用改进的遗传算法求解，得到 24 小时调度方案。结果表明，该方案使平均缺车时间下降 23.6\%，调度车辆总里程下降 11.4\%，在成本与服务水平之间取得较好平衡。
+
+\vspace{0.5em}
+\noindent{\heiti 关键词：}共享单车；多目标优化；遗传算法；站点聚类
+
+\newpage
+
+% ============ 第二页起：正文（页码从 1 开始） ============
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\section{问题重述}
+
+\subsection{问题背景}
+
+共享单车在早晚高峰存在明显的潮汐现象，需要调度车辆在站点间搬运车辆。题目给出某市 200 个站点 7 天的借还记录，要求制定调度方案。
+
+\subsection{需要解决的问题}
+
+（1）分析各站点分时段的需求特征；\\
+（2）建立调度优化模型并给出 24 小时调度方案；\\
+（3）对方案进行灵敏度分析。
+
+\section{问题分析}
+
+问题一属于数据描述性分析，可用分时段统计与聚类；问题二属于带时间窗的车辆路径问题（VRP），需在满足站点需求量约束下最小化成本。
+
+\section{模型假设}
+
+（1）调度车辆匀速行驶，忽略交通拥堵；\\
+（2）站点容量固定，不考虑临时扩容；\\
+（3）用户到达服从泊松分布。
+
+\section{符号说明}
+
+主要符号见表~\ref{tab:symbol}。
+
+\begin{table}[htbp]
+  \centering
+  \caption{符号说明}
+  \label{tab:symbol}
+  \begin{tabular}{clc}
+    \toprule
+    符号 & 含义 & 单位 \\
+    \midrule
+    $i$        & 站点编号，$i=1,2,\dots,200$ & -- \\
+    $d_{it}$   & 站点 $i$ 在时段 $t$ 的净需求 & 辆 \\
+    $x_{ijt}$  & 时段 $t$ 由 $i$ 调往 $j$ 的车辆数 & 辆 \\
+    $c_{ij}$   & 站点 $i$ 到 $j$ 的行驶成本 & 元 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{模型建立与求解}
+
+\subsection{目标函数}
+
+以调度总成本与缺车惩罚加权和为目标：
+\begin{equation}
+  \min F=\sum_{t=1}^{24}\sum_{i=1}^{200}\sum_{j=1}^{200} c_{ij}x_{ijt}
+  +\lambda\sum_{t=1}^{24}\sum_{i=1}^{200}\max\left(0,\,-s_{it}\right),
+  \label{eq:obj}
+\end{equation}
+其中 $s_{it}$ 为站点 $i$ 在时段 $t$ 的车辆余量，$\lambda$ 为缺车惩罚系数，取 $\lambda=5$。
+
+\subsection{约束条件}
+
+车辆守恒约束为
+\begin{equation}
+  s_{i,t+1}=s_{it}+d_{it}+\sum_{j\neq i}\left(x_{jit}-x_{ijt}\right),
+  \label{eq:balance}
+\end{equation}
+且各时段调出量不超过站点现有车辆数。
+
+\subsection{求解算法}
+
+采用改进遗传算法：种群规模 100，交叉概率 0.85，变异概率 0.05，迭代 500 代。编码采用“区域—时段”双层整数编码，可显著减少不可行解\cite{li2023vrp}。
+
+\section{模型检验}
+
+对 7 天数据做回测，平均缺车时间由 4.2\,h 降至 3.2\,h，下降 23.6\%；调度里程由 512\,km 降至 454\,km，下降 11.4\%，与理论预期一致\cite{wang2024bike}。
+
+\section{模型评价与推广}
+
+优点：兼顾成本与服务水平，算法可扩展至其他共享出行场景。缺点：未考虑实时需求波动，后续可引入滚动时域优化。
+
+\bibliographystyle{gbt7714-numerical}
+\bibliography{refs}
+
+\newpage
+\section*{附录}
+\addcontentsline{toc}{section}{附录}
+
+程序代码与原始数据表见附件（此处省略）。
+
+\end{document}

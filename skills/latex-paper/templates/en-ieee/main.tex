@@ -1,0 +1,99 @@
+% !TeX program = xelatex
+% =============================================================
+% 模板 05：IEEE Conference 会议论文（IEEEtran 官方文档类）
+% 编译： scripts\build.ps1 en-ieee
+% 版式： 双栏，10 pt，官方 IEEEtran.cls（TeX Live 自带，非自制）
+% 说明： IEEEtran 默认面向 pdfLaTeX；本工作台统一用 XeLaTeX 编译，
+%        若需与官方 Word/PDF 模板逐像素一致，可改用 pdflatex 编译。
+% =============================================================
+\documentclass[conference]{IEEEtran}
+
+\usepackage{cite}
+\usepackage{amsmath}
+\usepackage{fontspec}
+% IEEEtran 在 XeLaTeX 下不会自动加载 Times，这里显式换成 Times 的度量兼容克隆
+\setmainfont{TeX Gyre Termes}
+\usepackage{unicode-math}
+\setmathfont{TeX Gyre Termes Math}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+
+\begin{document}
+
+% ------------------------- 标题区（改这里） -------------------------
+\title{Placeholder Title: A Sample IEEE Conference Paper for Template Testing}
+
+\author{
+  \IEEEauthorblockN{San Zhang\IEEEauthorrefmark{1} and Si Li\IEEEauthorrefmark{2}}
+  \IEEEauthorblockA{\IEEEauthorrefmark{1}School of Electrical Engineering, XX University\\
+  Beijing, China \\
+  Email: zhangsan@example.edu.cn}
+  \IEEEauthorblockA{\IEEEauthorrefmark{2}School of Automation, XX University\\
+  Beijing, China \\
+  Email: lisi@example.edu.cn}
+}
+
+\maketitle
+
+% ------------------------- 摘要 -------------------------
+\begin{abstract}
+This paper is a placeholder for an IEEE conference submission. It demonstrates the
+title block, abstract, a numbered equation, a table, and a bibliography entry so that
+the layout can be checked before real content is written. Replace every sentence here
+with your own 150--250 word abstract.
+\end{abstract}
+
+\begin{IEEEkeywords}
+placeholder, template, IEEEtran, conference paper
+\end{IEEEkeywords}
+
+\section{Introduction}
+\IEEEPARstart{T}{his} is the introduction placeholder. A typical IEEE conference paper
+states the problem, reviews related work~\cite{lecun2015deep}, and lists contributions
+in a short bullet list at the end of this section.
+
+\section{Method}
+Let $x_i$ denote the $i$-th input feature and $w_i$ its weight. The weighted sum is
+\begin{equation}
+  y=\sum_{i=1}^{n} w_i x_i + b,
+  \label{eq:linear}
+\end{equation}
+where $b$ is the bias term. Equation~\eqref{eq:linear} is the equation placeholder.
+
+\section{Experimental Setup}
+The parameter settings used in the placeholder experiment are listed in
+Table~\ref{tab:params}.
+
+\begin{table}[h]
+  \renewcommand{\arraystretch}{1.2}
+  \caption{Placeholder Experimental Parameters}
+  \label{tab:params}
+  \centering
+  \begin{tabular}{lcc}
+    \toprule
+    Parameter & Symbol & Value \\
+    \midrule
+    Learning rate & $\eta$ & 0.01 \\
+    Batch size    & $B$    & 32   \\
+    Epochs        & $E$    & 100  \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Results}
+With the settings in Table~\ref{tab:params}, the placeholder model reaches 92.4\%
+accuracy on the validation split, which is consistent with the trend reported
+in~\cite{he2016resnet}.
+
+\section{Conclusion}
+This template compiles end-to-end with XeLaTeX and BibTeX. Replace the placeholder
+text, figures, and references with your own content before submission.
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\end{document}

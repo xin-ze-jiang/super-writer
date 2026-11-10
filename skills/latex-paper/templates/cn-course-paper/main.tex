@@ -1,0 +1,96 @@
+% !TeX program = xelatex
+% =============================================================
+% 模板 01：中文课程论文（ctex + XeLaTeX + BibTeX / GB/T 7714）
+% 编译： scripts\build.ps1 cn-course-paper
+% 需要改： 标题、作者、单位、摘要、关键词、正文、refs.bib
+% 版式： A4，上下 2.54cm，左右 3.17cm，正文小四，1.5 倍行距
+% =============================================================
+\documentclass[UTF8,a4paper,zihao=-4,fontset=windows]{ctexart}
+
+\usepackage{geometry}
+\geometry{top=2.54cm,bottom=2.54cm,left=3.17cm,right=3.17cm}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{gbt7714}
+\usepackage[hidelinks]{hyperref}
+
+\linespread{1.5}
+\pagestyle{plain}   % 页码居中页脚，不显示页眉
+\captionsetup{font=small,labelsep=quad}
+\captionsetup[table]{position=top}
+\captionsetup[figure]{position=bottom}
+
+\begin{document}
+
+% ------------------------- 标题区（改这里） -------------------------
+\begin{center}
+  {\zihao{3}\heiti 占位标题：基于 XXX 方法的 YYY 问题研究}\\[0.8em]
+  {\zihao{-4} 张\quad 三}\\[0.4em]
+  {\zihao{5}（XX 大学 \ XX 学院，XX 专业，学号 2026000000）}
+\end{center}
+
+\vspace{0.5em}
+
+% ------------------------- 摘要（改这里） -------------------------
+\noindent{\heiti 摘\quad 要：}这里是摘要占位文字。本文围绕 XXX 问题，采用 YYY 方法建立了 ZZZ 模型，并通过实验验证了模型的有效性。摘要应独立成篇，200--300 字，不出现图表和公式编号。
+
+\vspace{0.3em}
+\noindent{\heiti 关键词：}占位关键词一；占位关键词二；占位关键词三
+
+\vspace{0.6em}
+\hrule
+\vspace{0.8em}
+
+% ------------------------- 正文 -------------------------
+\section{引言}
+
+这里是正文占位内容。课程论文的引言通常交代研究背景、国内外现状和本文工作。引用参考文献时使用 \verb|\cite|，例如文献~\cite{zhang2024demo} 给出了相关结论，英文文献示例见~\cite{smith2023demo}。
+
+\section{方法}
+
+\subsection{模型描述}
+
+设输入变量为 $x_i$，权重为 $\alpha_i$，则加权综合指标可写为
+\begin{equation}
+  S(x)=\sum_{i=1}^{n}\alpha_i x_i+\beta_0,
+  \label{eq:weighted}
+\end{equation}
+其中 $\beta_0$ 为偏置项。式~\eqref{eq:weighted} 为公式占位示例，可直接替换。
+
+\subsection{参数设置}
+
+实验参数见表~\ref{tab:params}。
+
+% ------------------------- 表格 -------------------------
+\begin{table}[htbp]
+  \centering
+  \caption{实验参数设置（表格占位示例）}
+  \label{tab:params}
+  \begin{tabular}{lccc}
+    \toprule
+    参数 & 符号 & 取值 & 单位 \\
+    \midrule
+    学习率     & $\eta$   & 0.01 & --   \\
+    迭代次数   & $N$      & 1000 & 次   \\
+    正则系数   & $\lambda$& 0.10 & --   \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{结果与分析}
+
+表~\ref{tab:params} 给出参数配置，按式~\eqref{eq:weighted} 计算后可对比不同方案的效果。此处补充结果描述、图表解释与误差分析。
+
+\section{结论}
+
+本文完成了占位内容的研究，得到如下结论：（1）\ldots；（2）\ldots。
+
+% ------------------------- 参考文献 -------------------------
+\bibliographystyle{gbt7714-numerical}
+\bibliography{refs}
+
+\end{document}

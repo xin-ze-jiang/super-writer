@@ -1,0 +1,120 @@
+% !TeX program = xelatex
+% =============================================================
+% 模板 02：中文实验报告（ctex + XeLaTeX + BibTeX / GB/T 7714）
+% 编译： scripts\build.ps1 cn-lab-report
+% 适用： 大学物理实验、电路实验、模电/数电实验等课程报告
+% 版式： A4，上下 2.54cm，左右 3.17cm，正文小四，1.5 倍行距
+% =============================================================
+\documentclass[UTF8,a4paper,zihao=-4,fontset=windows]{ctexart}
+
+\usepackage{geometry}
+\geometry{top=2.54cm,bottom=2.54cm,left=3.17cm,right=3.17cm}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{gbt7714}
+\usepackage[hidelinks]{hyperref}
+
+\linespread{1.5}
+\pagestyle{plain}   % 页码居中页脚，不显示页眉
+\captionsetup{font=small,labelsep=quad}
+\captionsetup[table]{position=top}
+
+% 一级标题用“一、二、三”形式，四号黑体
+\ctexset{
+  section = {
+    name   = {,、},
+    number = \chinese{section},
+    format = \zihao{4}\heiti
+  },
+  subsection = {format = \zihao{-4}\heiti}
+}
+
+% 实验报告常用信息栏
+\newcommand{\labinfo}[4]{%
+  \noindent
+  \begin{tabular}{@{}p{0.24\textwidth}p{0.26\textwidth}p{0.24\textwidth}p{0.26\textwidth}@{}}
+    课程名称： & #1 & 实验日期： & #2 \\
+    姓\qquad 名： & #3 & 学\qquad 号： & #4 \\
+  \end{tabular}\par\vspace{0.6em}\hrule\vspace{0.8em}
+}
+
+\begin{document}
+
+% ------------------------- 标题区（改这里） -------------------------
+\begin{center}
+  {\zihao{3}\heiti 实验报告：共射放大电路静态工作点的测量}\\[0.6em]
+  {\zihao{5}（实验报告占位标题，替换成你的实验名称）}
+\end{center}
+
+\labinfo{模拟电子技术实验}{2026-11-10}{张三}{2026000000}
+
+% ------------------------- 一、实验目的 -------------------------
+\section{实验目的}
+
+（1）掌握共射放大电路静态工作点的测量方法；\\
+（2）熟悉直流稳压电源、万用表、示波器的基本操作；\\
+（3）学会由实测数据判断晶体管工作状态。
+
+\section{实验原理}
+
+共射放大电路的静态工作点由基极偏置电阻决定。集电极电流与集电极—发射极电压分别为
+\begin{equation}
+  I_{CQ}=\beta I_{BQ},\qquad
+  U_{CEQ}=V_{CC}-I_{CQ}R_{C},
+  \label{eq:qpoint}
+\end{equation}
+式中 $\beta$ 为电流放大系数，$V_{CC}$ 为电源电压，$R_{C}$ 为集电极电阻。实测中先测 $U_{BEQ}$、$U_{CEQ}$，再由式~\eqref{eq:qpoint} 反推 $I_{CQ}$。
+
+\section{实验器材}
+
+直流稳压电源 1 台，数字万用表 1 台，示波器 1 台，面包板 1 块，晶体管 9013 一只，电阻、电容若干。
+
+\section{实验内容与步骤}
+
+（1）按原理图搭接电路，检查无误后接通电源；\\
+（2）调节 $R_{b}$，使 $U_{CEQ}\approx V_{CC}/2$，记录此时各点电压；\\
+（3）改变 $R_{b}$，重复测量 3 组数据；\\
+（4）用示波器观察输出波形，判断是否出现饱和或截止失真。
+
+\section{数据记录与处理}
+
+测量数据见表~\ref{tab:data}，表中 $U_{BEQ}$、$U_{CEQ}$ 由万用表直流电压挡测得，$I_{CQ}$ 由式~\eqref{eq:qpoint} 计算。
+
+\begin{table}[htbp]
+  \centering
+  \caption{静态工作点测量数据}
+  \label{tab:data}
+  \begin{tabular}{cccccc}
+    \toprule
+    序号 & $R_{b}$/k$\Omega$ & $U_{BEQ}$/V & $U_{CEQ}$/V & $I_{CQ}$/mA & 工作状态 \\
+    \midrule
+    1 & 300 & 0.68 & 5.98 & 1.01 & 放大区 \\
+    2 & 200 & 0.70 & 3.12 & 1.94 & 放大区 \\
+    3 & 100 & 0.72 & 0.35 & 2.47 & 饱和区 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+以第 2 组数据为例，相对误差按
+\begin{equation}
+  \delta=\frac{\left|I_{CQ,\text{实}}-I_{CQ,\text{理}}\right|}{I_{CQ,\text{理}}}\times100\%
+  \label{eq:error}
+\end{equation}
+计算，得 $\delta\approx 3.2\%$，在允许范围内。
+
+\section{误差分析}
+
+主要误差来源：万用表内阻分流、电阻标称值与实际值偏差、晶体管 $\beta$ 随温度漂移。改进办法是采用高输入阻抗仪表并在恒温环境下测量。
+
+\section{结论}
+
+通过本次实验测得三组静态工作点数据，验证了式~\eqref{eq:qpoint} 的正确性；当 $R_{b}$ 减小到 100\,k$\Omega$ 时晶体管进入饱和区，与理论分析一致\cite{zhang2024demo}。
+
+\bibliographystyle{gbt7714-numerical}
+\bibliography{refs}
+
+\end{document}

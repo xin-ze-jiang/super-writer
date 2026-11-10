@@ -1,0 +1,42 @@
+# 编译产物与预览输出
+output/
+out/
+*.pdf
+
+# LaTeX 中间文件
+*.aux
+*.log
+*.bbl
+*.bcf
+*.blg
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.run.xml
+*.spl
+*.brf
+*.idx
+*.ilg
+*.ind
+*.glo
+*.gls
+*.xdv
+*.dvi
+
+# Node / Python
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 编辑器与系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
