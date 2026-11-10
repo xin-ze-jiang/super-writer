@@ -77,6 +77,15 @@
 | `gbt7714` | 国标文献（bibtex） | `\bibliographystyle{gbt7714-numerical}` |
 | `biblatex`+`style=gb7714-2015` | 国标文献（biber） | `backend=biber` + `\printbibliography` |
 
+**进阶块**（代码块、算法伪代码、子图、跨页长表、图表按章/节编号）不要自己拼宏包，直接照抄 `references/latex-blocks.md` 里的导言区设置与正文写法。要点：
+
+- 代码：`listings` + `\lstset{...}`，中文标题用 `\renewcommand{\lstlistingname}{代码}`。
+- 算法：`algorithm2e[ruled,linesnumbered]` + `\SetAlgorithmName{算法}{算法}{算法列表}`。
+- 子图：`subcaption`（与 `subfig`/`subfigure` 互斥），`subfigure` 宽 0.45 配 `\hfill`。
+- 跨页长表：`longtable`，必须写 `\endfirsthead` / `\endhead` / `\endfoot` 三段，且不能放进 `table` 环境。
+- 按章编号：`\counterwithin{figure}{chapter}` + `\renewcommand{\thefigure}{\thechapter-\arabic{figure}}`（表、公式同理）；按节编号用 `\numberwithin{figure}{section}`。
+- 加载顺序：`caption`/`subcaption` 必须在 `hyperref` **之前**。
+
 ## 6. 中文文献两种写法（别混用）
 
 ```latex

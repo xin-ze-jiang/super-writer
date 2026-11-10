@@ -1,0 +1,252 @@
+% !TeX program = xelatex
+% =============================================================
+% 模板 08：中文本科毕业论文（ctexbook + XeLaTeX + BibTeX / GB/T 7714）
+% 编译： scripts\build.ps1 cn-thesis
+% 结构： 封面 → 中英文摘要 → 目录 → 五章正文 → 参考文献 → 致谢 → 附录
+% 版式： A4，上下 2.54cm、左右 3.0cm，正文小四宋体 1.5 倍行距
+% 编号： 图/表/公式按章编号（图 1-1、表 2-1、式 (3-1)）
+% =============================================================
+\documentclass[UTF8,a4paper,zihao=-4,fontset=windows,openany]{ctexbook}
+
+\usepackage{geometry}
+\geometry{top=2.54cm,bottom=2.54cm,left=3.0cm,right=3.0cm}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage{gbt7714}
+\usepackage[hidelinks]{hyperref}
+
+\linespread{1.5}
+
+% 页脚居中页码，不要页眉
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+\captionsetup{font=small,labelsep=quad}
+\captionsetup[table]{position=top}
+\captionsetup[figure]{position=bottom}
+
+% ------------------------- 图表公式按章编号 -------------------------
+% 想要全文连续编号，删掉下面 6 行即可（编号变成 图1、表1、式(1)）
+\counterwithin{figure}{chapter}
+\counterwithin{table}{chapter}
+\counterwithin{equation}{chapter}
+\renewcommand{\thefigure}{\thechapter-\arabic{figure}}
+\renewcommand{\thetable}{\thechapter-\arabic{table}}
+\renewcommand{\theequation}{\thechapter-\arabic{equation}}
+
+% 参考文献标题由 natbib 的 \bibsection 生成，在这里补目录项，页码才不会错位
+\renewcommand{\bibsection}{%
+  \chapter*{\bibname}%
+  \phantomsection
+  \addcontentsline{toc}{chapter}{\bibname}%
+}
+
+% ------------------------- 章节标题样式 -------------------------
+\ctexset{
+  chapter = {
+    format    = \zihao{3}\heiti\centering,
+    name      = {第,章},
+    number    = \arabic{chapter},
+    aftername = \quad
+  },
+  section    = {format = \zihao{4}\heiti},
+  subsection = {format = \zihao{-4}\heiti}
+}
+
+\begin{document}
+
+% ============================ 封面 ============================
+% 不用 titlepage 环境：它自带 \newpage + 重置页码，会和后续章节的空页冲突
+\thispagestyle{empty}
+\begin{center}
+  \vspace*{1.8cm}
+  {\zihao{2}\heiti XX 大学\par}
+  \vspace{0.6cm}
+  {\zihao{3}\heiti 本科毕业论文（设计）\par}
+  \vspace{2.8cm}
+  {\zihao{2}\heiti 占位题目：基于 XXX 方法的 YYY 问题研究\par}
+  \vspace{2.8cm}
+  {\zihao{4}
+  \renewcommand{\arraystretch}{1.6}
+  \begin{tabular}{rl}
+    学\qquad 院： & XX 学院 \\
+    专\qquad 业： & XX 专业 \\
+    班\qquad 级： & 2026 级 X 班 \\
+    学生姓名： & 张\quad 三 \\
+    学\qquad 号： & 2026000000 \\
+    指导教师： & 李\quad 四\quad 副教授 \\
+  \end{tabular}\par}
+  \vfill
+  {\zihao{4} 2026 年 6 月\par}
+\end{center}
+
+% ============================ 前置部分 ============================
+% 封面计为第 0 页且不显示页码，摘要页从 I 开始；不要用 \frontmatter，会和封面抢分页
+\pagenumbering{Roman}
+\setcounter{page}{0}
+
+% ------------------------- 中文摘要 -------------------------
+\chapter*{摘\quad 要}
+\addcontentsline{toc}{chapter}{摘要}
+
+这里是中文摘要占位文字。本文围绕 XXX 问题，采用 YYY 方法建立了 ZZZ 模型，并通过实验验证了模型的有效性。本科毕业论文摘要一般 300--500 字，应能独立成篇，不出现图表和公式编号，不写「本文第一章」之类的导航语。
+
+\vspace{1em}
+\noindent{\heiti 关键词：}占位关键词一；占位关键词二；占位关键词三；占位关键词四
+
+% ------------------------- 英文摘要 -------------------------
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+This is a placeholder abstract. This thesis studies the XXX problem with the YYY method, builds a ZZZ model, and validates it experimentally. Replace this paragraph with your own 200--300 word abstract, which should be self-contained and contain no figure or equation numbers.
+
+\vspace{1em}
+\noindent{\bfseries Keywords:} placeholder keyword one; placeholder keyword two; placeholder keyword three
+
+% ------------------------- 目录 -------------------------
+\tableofcontents
+
+% ============================ 正文 ============================
+\mainmatter   % 阿拉伯数字页码，从 1 开始
+
+\chapter{绪论}
+\label{chap:intro}
+
+\section{研究背景与意义}
+
+这里是研究背景占位内容。说明课题来自什么工程/学术问题、为什么值得做。引用文献示例：文献~\cite{zhang2024demo} 给出了相关工作，英文文献见~\cite{smith2023demo}。
+
+\section{国内外研究现状}
+
+按「国外—国内—小结」分段写，每段结尾点明已有工作的不足，自然过渡到本文工作。
+
+\section{本文主要工作}
+
+本文主要工作包括：
+\begin{enumerate}
+  \item 建立了 XXX 模型；
+  \item 设计了 YYY 方法；
+  \item 通过实验验证了上述方法的有效性。
+\end{enumerate}
+
+\section{论文结构安排}
+
+第~\ref{chap:intro} 章为绪论；第~\ref{chap:method} 章介绍方法与模型；第~\ref{chap:design} 章给出设计实现；第~\ref{chap:experiment} 章为实验与结果分析；第~\ref{chap:conclusion} 章总结全文。
+
+% ============================ 第 2 章 ============================
+\chapter{相关理论与方法}
+\label{chap:method}
+
+\section{问题描述}
+
+设输入变量为 $x_i$，权重为 $\alpha_i$，则加权综合指标可写为
+\begin{equation}
+  S(x)=\sum_{i=1}^{n}\alpha_i x_i+\beta_0,
+  \label{eq:weighted}
+\end{equation}
+其中 $\beta_0$ 为偏置项。式~\eqref{eq:weighted} 为公式占位示例。
+
+\section{模型建立}
+
+实验参数见表~\ref{tab:params}。
+
+% ------------------------- 表格 -------------------------
+\begin{table}[htbp]
+  \centering
+  \caption{实验参数设置（表格占位示例）}
+  \label{tab:params}
+  \begin{tabular}{lccc}
+    \toprule
+    参数 & 符号 & 取值 & 单位 \\
+    \midrule
+    学习率     & $\eta$    & 0.01 & -- \\
+    迭代次数   & $N$       & 1000 & 次 \\
+    正则系数   & $\lambda$ & 0.10 & -- \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{本章小结}
+
+本章介绍了 XXX 理论与 YYY 方法，为第~\ref{chap:design} 章的设计提供依据。
+
+% ============================ 第 3 章 ============================
+\chapter{系统设计与实现}
+\label{chap:design}
+
+\section{总体方案}
+
+系统总体框图见图~\ref{fig:framework}。
+
+% ------------------------- 图 -------------------------
+% 换成真实图片：把 \rule 那行替换为
+% \includegraphics[width=0.75\textwidth]{figs/framework.pdf}
+\begin{figure}[htbp]
+  \centering
+  \framebox[0.65\textwidth][c]{\rule{0pt}{4cm}}
+  \caption{系统总体框图（占位图，请替换为真实图片）}
+  \label{fig:framework}
+\end{figure}
+
+\section{关键模块实现}
+
+分模块说明输入、处理、输出，配合伪代码或流程说明。
+
+\section{本章小结}
+
+本章完成了系统设计，第~\ref{chap:experiment} 章给出实验验证。
+
+% ============================ 第 4 章 ============================
+\chapter{实验与结果分析}
+\label{chap:experiment}
+
+\section{实验设置}
+
+说明数据集、软硬件环境、对比方法与评价指标。参数配置见第~\ref{chap:method} 章表~\ref{tab:params}。
+
+\section{结果分析}
+
+结合图表说明：主要结果是什么、与对比方法相比好在哪里、误差来源是什么、结果是否稳定。
+
+\section{本章小结}
+
+本章实验表明 XXX 方法在 YYY 指标上优于对比方案。
+
+% ============================ 第 5 章 ============================
+\chapter{总结与展望}
+\label{chap:conclusion}
+
+\section{全文总结}
+
+概括本文完成的三项工作和主要结论。
+
+\section{不足与展望}
+
+指出方法的局限（数据规模、应用场景、计算开销等），给出可行的改进方向。
+
+% ============================ 参考文献 ============================
+\bibliographystyle{gbt7714-numerical}
+\bibliography{refs}
+
+% ============================ 致谢 ============================
+\chapter*{致\quad 谢}
+\addcontentsline{toc}{chapter}{致谢}
+
+感谢指导教师在选题、方案与写作上的指导，感谢实验室同学在实验与数据处理上的帮助，感谢家人一直以来的支持。
+
+% ============================ 附录 ============================
+\appendix
+\ctexset{chapter={name={附录,},number=\Alph{chapter}}}
+\chapter{核心代码}
+\label{app:code}
+
+附录放不宜进正文的材料：核心代码、原始数据表、详细推导等。
+
+\end{document}

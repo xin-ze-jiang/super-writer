@@ -1,0 +1,140 @@
+% !TeX program = xelatex
+% =============================================================
+% 模板 09：Elsevier 期刊投稿（elsarticle，单栏 preprint/review）
+% 编译： scripts\build.ps1 en-journal-els
+% 版式： A4 单栏 12pt，行号（review 选项），Elsevier 官方 elsarticle.cls
+% 用途： SCI 期刊初稿、投稿前排版；正式投稿按目标期刊 Guide for Authors 调整
+% =============================================================
+\documentclass[preprint,review,12pt]{elsarticle}
+
+\usepackage{amsmath}
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Termes}
+\usepackage{unicode-math}
+\setmathfont{TeX Gyre Termes Math}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+% ------------------------- 审稿用行号 -------------------------
+% elsarticle 的 review 选项只改行距、不加行号；行号要自己开。
+% 正式排版（camera-ready）时删掉下面两行即可。
+\usepackage{lineno}
+\raggedbottom   % 单栏 preprint 常用：页面底部不强制撑满，换页更自然
+
+\journal{Journal of Placeholder Studies}
+
+\begin{document}
+
+\begin{frontmatter}
+
+% ------------------------- 标题与作者（改这里） -------------------------
+\title{Placeholder Title: A Sample Elsevier Journal Manuscript for Template Testing}
+
+\author[inst1]{San Zhang\corref{cor1}}
+\ead{zhangsan@example.edu.cn}
+\cortext[cor1]{Corresponding author.}
+
+\author[inst2]{Si Li}
+\ead{lisi@example.edu.cn}
+
+\affiliation[inst1]{organization={School of Electrical Engineering, XX University},
+  addressline={No. 1 Placeholder Road},
+  city={Beijing},
+  postcode={100000},
+  country={China}}
+
+\affiliation[inst2]{organization={School of Automation, XX University},
+  addressline={No. 2 Placeholder Road},
+  city={Beijing},
+  postcode={100000},
+  country={China}}
+
+% ------------------------- 摘要与关键词 -------------------------
+\begin{abstract}
+This manuscript is a placeholder for an Elsevier journal submission. It demonstrates the
+front matter, a numbered equation, a table, and a bibliography entry so that the layout
+can be checked before the real content is written. Replace every sentence here with your
+own 150--250 word abstract. A journal abstract should state the problem, the method, the
+main quantitative results, and the conclusion, without citations or undefined abbreviations.
+\end{abstract}
+
+\begin{keyword}
+placeholder \sep template \sep Elsevier \sep elsarticle \sep journal manuscript
+\end{keyword}
+
+\end{frontmatter}
+
+% 正文才加行号：放在 frontmatter 之后，避免标题区脚注触发行号溢出
+\linenumbers
+
+% ------------------------- 正文 -------------------------
+\section{Introduction}
+\label{sec:intro}
+
+This is the introduction placeholder. A journal introduction usually covers the research
+background, a critical review of related work~\cite{lecun2015deep,he2016resnet}, the
+research gap, and a clearly stated list of contributions at the end of the section.
+
+\section{Materials and Methods}
+\label{sec:method}
+
+Let $x_i$ denote the $i$-th input feature and $w_i$ its weight. The weighted sum is
+\begin{equation}
+  y=\sum_{i=1}^{n} w_i x_i + b,
+  \label{eq:linear}
+\end{equation}
+where $b$ is the bias term. Equation~\eqref{eq:linear} is the equation placeholder.
+
+The parameter settings are listed in Table~\ref{tab:params}.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Placeholder experimental parameters.}
+  \label{tab:params}
+  \begin{tabular}{lccc}
+    \toprule
+    Parameter & Symbol & Value & Unit \\
+    \midrule
+    Learning rate & $\eta$    & 0.01 & --  \\
+    Epochs        & $E$       & 100  & --  \\
+    Batch size    & $B$       & 32   & --  \\
+    Weight decay  & $\lambda$ & 0.10 & --  \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Results and Discussion}
+\label{sec:results}
+
+With the settings in Table~\ref{tab:params}, the placeholder model reaches 92.4\% accuracy
+on the validation split. Report mean and standard deviation over repeated runs, state the
+statistical test used, and discuss both the improvement and its limitations. Figures should
+be vector graphics (PDF/EPS) at final print size.
+
+\section{Conclusions}
+\label{sec:conclusion}
+
+This template compiles end-to-end with XeLaTeX and BibTeX. Replace the placeholder text,
+figures, and references with your own content before submission, and follow the target
+journal's Guide for Authors for reference style, highlights, and graphical abstract.
+
+% ------------------------- 声明（按期刊要求增删） -------------------------
+\newpage   % 声明与参考文献单独起页，避免 CRediT 段落跨页
+\section*{CRediT authorship contribution statement}
+\textbf{San Zhang:} Conceptualization, Methodology, Writing -- original draft.
+\textbf{Si Li:} Validation, Writing -- review \& editing.
+
+\section*{Declaration of competing interest}
+The authors declare that they have no known competing financial interests or personal
+relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Data availability}
+Data will be made available on request.
+
+% ------------------------- 参考文献 -------------------------
+\bibliographystyle{elsarticle-num}
+\bibliography{refs}
+
+\end{document}

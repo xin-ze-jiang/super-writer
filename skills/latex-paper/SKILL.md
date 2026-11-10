@@ -1,15 +1,15 @@
 ---
 name: latex-paper
-description: "LaTeX 论文排版：7 套现成模板（中文课程论文/实验报告/作业、数模国赛、IEEE、ACM、美赛），XeLaTeX 自动跑 bibtex/biber 出 PDF。用户要排版论文、编译 .tex、查 LaTeX 报错或改字号页边距时启用。"
+description: "LaTeX 论文排版：10 套现成模板（中文课程论文/实验报告/作业/数模国赛/本科毕业论文、IEEE/ACM/美赛、Elsevier 与 IEEE 期刊投稿），XeLaTeX 自动跑 bibtex/biber 出 PDF。用户要排版论文、编译 .tex、查 LaTeX 报错或改字号页边距时启用。"
 ---
 
 # latex-paper · LaTeX 论文排版工作台
 
 ## 一、这个技能是什么
 
-一套已经在本机装好、编译验证过的 LaTeX 排版底稿：7 套模板 + 一键编译脚本（XeLaTeX + 自动识别 bibtex/biber）+ 速查手册。用户给题目、正文、数据，就直接改模板、跑编译、交 PDF。
+一套已经在本机装好、编译验证过的 LaTeX 排版底稿：10 套模板 + 一键编译脚本（XeLaTeX + 自动识别 bibtex/biber）+ 速查手册。用户给题目、正文、数据，就直接改模板、跑编译、交 PDF。
 
-**启用**：中文课程论文、实验报告、平时作业、数学建模国赛（CUMCM）、IEEE / ACM 英文会议论文、MCM/ICM 美赛；任何"把内容排成论文/报告 PDF"的需求；LaTeX 报错排查；改字号、页边距、行距、字体、参考文献样式。
+**启用**：中文课程论文、实验报告、平时作业、数学建模国赛（CUMCM）、本科毕业论文、IEEE / ACM 英文会议论文、MCM/ICM 美赛、Elsevier / IEEE 期刊投稿初稿；任何"把内容排成论文/报告 PDF"的需求；LaTeX 报错排查；改字号、页边距、行距、字体、参考文献样式。
 
 **不启用**：做 PPT（用 sj-ppt）、纯数据处理不出文档、Word/Markdown 排版。
 
@@ -17,7 +17,7 @@ description: "LaTeX 论文排版：7 套现成模板（中文课程论文/实验
 
 ```
 <技能目录>\
-├─ templates\<模板名>\      main.tex + refs.bib（7 套，唯一底稿）
+├─ templates\<模板名>\      main.tex + refs.bib（10 套，唯一底稿）
 ├─ scripts\build.ps1        一键编译脚本
 ├─ scripts\parse_log.ps1    日志诊断解析（文件:行号: 说明）
 ├─ references\              模板选择、报错排查、中文排版、英文字体
@@ -30,7 +30,7 @@ description: "LaTeX 论文排版：7 套现成模板（中文课程论文/实验
 
 **文件缺失时**（用户删了、换机器）：
 1. 先确认 `<技能目录>\templates` 和 `xelatex` 是否真的不可用，别凭猜测重装。
-2. 只缺 `templates\` → 按 `references/templates.md` 末尾「模板重建规格」逐套重建：每套只需 1 个 `main.tex` + 1 个 `refs.bib`（模板名即目录名，入口文件必须叫 `main.tex`）。重建后跑 `build.ps1 -All` 自检，7 套全绿才算恢复。
+2. 只缺 `templates\` → 按 `references/templates.md` 末尾「模板重建规格」逐套重建：每套只需 1 个 `main.tex` + 1 个 `refs.bib`（模板名即目录名，入口文件必须叫 `main.tex`）。重建后跑 `build.ps1 -All` 自检，10 套全绿才算恢复。
 3. 只缺 `build.ps1` → 按本文第五节流程重写：xelatex → bibtex/biber → xelatex ×2 → 复制到 `output\<文件夹名>.pdf` → 清中间文件。
 4. 缺引擎 → 让用户安装 TeX Live（full scheme），不要用 MiKTeX 替代。
 5. 不要在技能目录外再复制一份 `templates\`：底稿只有一份，以技能内 `templates\` 为准。
@@ -39,13 +39,18 @@ description: "LaTeX 论文排版：7 套现成模板（中文课程论文/实验
 
 | 场景 | 模板目录 | 文档类 / 格式 |
 |---|---|---|
+| 中文本科毕业论文 | `cn-thesis` | ctexbook，封面 + 中英摘要 + 目录 + 五章正文 + 致谢 + 附录，图表按章编号（图 1-1） |
 | 中文课程论文、结课小论文 | `cn-course-paper` | ctexart，小四宋体 1.5 倍行距，GB/T 7714（bibtex） |
 | 中文实验报告、实验数据与分析 | `cn-lab-report` | ctexart，`\labinfo{课程}{日期}{姓名}{学号}`，section 为「一、二、」 |
 | 通用课程作业、习题解答 | `cn-homework` | ctexart + biblatex(gb7714-2015) + **biber** |
 | 全国大学生数学建模竞赛 | `cn-cumcm` | article + ctex，摘要页不编页码、正文从 1 起、题目三号黑体 |
+| Elsevier 期刊投稿（单栏） | `en-journal-els` | elsarticle[preprint,review]，12pt 单栏、正文带审稿行号 |
+| IEEE 期刊投稿（双栏） | `en-journal-ieee` | IEEEtran[journal]，双栏 10pt、作者简介留位 |
 | IEEE conference 英文论文 | `en-ieee` | IEEEtran[conference]，双栏，TeX Gyre Termes |
 | ACM sigconf 英文论文 | `en-acm` | acmart[sigconf,nonacm] 双栏，CCS 概念 |
 | MCM/ICM 美赛 | `en-mcm` | article 12pt + 1in 边距 + Summary Sheet + Times |
+
+中文模板要代码块、算法伪代码、子图、跨页长表或图表按节编号时，不要自己拼宏包：按 `references/latex-blocks.md` 的块复制即可（每块都验证过）。
 
 拿不准就问一句：中文还是英文、课程论文还是竞赛、学校/会议有没有指定模板。学校有硬性格式要求时，以用户给的为准改底稿副本。
 
@@ -81,7 +86,7 @@ description: "LaTeX 论文排版：7 套现成模板（中文课程论文/实验
 ```powershell
 .\scripts\build.ps1 cn-cumcm              # 按模板名（只在 templates 下找）
 .\scripts\build.ps1 'D:\...\我的作业'      # 按目录路径（作业目录用这个）
-.\scripts\build.ps1 -All                  # 依次编译 templates 下全部 7 套，出汇总表
+.\scripts\build.ps1 -All                  # 依次编译 templates 下全部 10 套，出汇总表
 .\scripts\build.ps1 cn-cumcm -KeepAux     # 保留 .aux/.log/.bcf 等中间文件，排错用
 .\scripts\build.ps1 'D:\...\我的作业' -Parse           # 输出「文件:行号: 说明」结构化诊断
 .\scripts\build.ps1 'D:\...\我的作业' -Watch           # 监听保存，自动重编译 + SumatraPDF 预览
@@ -108,6 +113,7 @@ description: "LaTeX 论文排版：7 套现成模板（中文课程论文/实验
 | 文件 | 什么时候读 |
 |---|---|
 | `references/templates.md` | 选模板、查目录约定与产物规则、提交前要替换哪些字段、**底稿丢了怎么重建** |
+| `references/latex-blocks.md` | 加代码块（listings）、算法伪代码（algorithm2e）、子图（subcaption）、跨页长表（longtable）、图表按章/节编号 |
 | `references/errors.md` | 编译报错、`[?]` 引用、字体找不到、环境/依赖检查 |
 | `references/chinese-typesetting.md` | 改字号/页边距/行距/字体/编号样式、常用宏包、Windows 中文字体 |
 | `references/english-fonts.md` | 英文模板字体（IEEE 的 Termes、ACM 的 Libertine、美赛的 Times） |

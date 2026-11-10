@@ -1,0 +1,126 @@
+% !TeX program = xelatex
+% =============================================================
+% 模板 10：IEEE 期刊投稿（IEEEtran journal，双栏 10pt）
+% 编译： scripts\build.ps1 en-journal-ieee
+% 版式： 双栏 10pt，IEEE 官方 IEEEtran.cls
+% 用途： IEEE Transactions / Journals 初稿；会议投稿用 en-ieee
+% =============================================================
+\documentclass[journal,10pt]{IEEEtran}
+
+\usepackage{cite}
+\usepackage{amsmath}
+\usepackage{fontspec}
+% IEEEtran 在 XeLaTeX 下不会自动加载 Times，这里显式换成度量兼容克隆
+\setmainfont{TeX Gyre Termes}
+\usepackage{unicode-math}
+\setmathfont{TeX Gyre Termes Math}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+
+\begin{document}
+
+% ------------------------- 标题与作者（改这里） -------------------------
+\title{Placeholder Title: A Sample IEEE Transactions Manuscript for Template Testing}
+
+\author{San Zhang,~\IEEEmembership{Student Member,~IEEE,}
+  Si Li,~\IEEEmembership{Member,~IEEE,}
+  and Wu Wang,~\IEEEmembership{Senior Member,~IEEE}%
+\thanks{Manuscript received 1 January 2026; revised 1 March 2026; accepted 1 April 2026.
+  Date of publication 1 May 2026; date of current version 1 June 2026. This work was
+  supported by the National Natural Science Foundation of China under Grant 00000000.
+  (Corresponding author: Si Li.)}%
+\thanks{San Zhang and Si Li are with the School of Electrical Engineering, XX University,
+  Beijing 100000, China (e-mail: zhangsan@example.edu.cn; lisi@example.edu.cn).}%
+\thanks{Wu Wang is with the School of Automation, YY University, Shanghai 200000, China
+  (e-mail: wangwu@example.edu.cn).}}
+
+\markboth{IEEE Transactions on Placeholder Studies, Vol. 1, No. 1, January 2026}%
+{Zhang \MakeLowercase{\textit{et al.}}: Placeholder IEEE Transactions Manuscript}
+
+\maketitle
+
+% ------------------------- 摘要与关键词 -------------------------
+\begin{abstract}
+This manuscript is a placeholder for an IEEE Transactions submission. It demonstrates the
+title block, the abstract, a numbered equation, a table, and a bibliography entry so that
+the layout can be checked before the real content is written. Replace every sentence here
+with your own 150--250 word abstract, which should state the problem, the approach, the
+main quantitative results, and the conclusion, without citations or undefined abbreviations.
+\end{abstract}
+
+\begin{IEEEkeywords}
+\raggedright
+placeholder, template, IEEEtran, journal manuscript, two-column layout, formatting check
+\end{IEEEkeywords}
+
+% ------------------------- 正文 -------------------------
+\section{Introduction}
+\label{sec:intro}
+This is the introduction placeholder. An IEEE Transactions introduction
+usually states the problem, critically reviews related work~\cite{lecun2015deep,he2016resnet},
+identifies the research gap, and ends with the contributions of this paper.
+
+\section{Method}
+\label{sec:method}
+Let $x_i$ denote the $i$-th input feature and $w_i$ its weight. The weighted sum is
+\begin{equation}
+  y=\sum_{i=1}^{n} w_i x_i + b,
+  \label{eq:linear}
+\end{equation}
+where $b$ is the bias term. Equation~\eqref{eq:linear} is the equation placeholder.
+
+\section{Experimental Setup}
+\label{sec:setup}
+The parameter settings are listed in Table~\ref{tab:params}.
+
+\begin{table}[h]
+  \renewcommand{\arraystretch}{1.2}
+  \caption{Placeholder Experimental Parameters}
+  \label{tab:params}
+  \centering
+  \begin{tabular}{lcc}
+    \toprule
+    Parameter & Symbol & Value \\
+    \midrule
+    Learning rate & $\eta$    & 0.01 \\
+    Epochs        & $E$       & 100  \\
+    Batch size    & $B$       & 32   \\
+    Weight decay  & $\lambda$ & 0.10 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Results and Discussion}
+\label{sec:results}
+With the settings in Table~\ref{tab:params}, the placeholder model reaches 92.4\% accuracy
+on the validation split. Report mean and standard deviation over repeated runs, state the
+statistical test used, and discuss why the improvement holds rather than only reporting it.
+
+\section{Conclusion}
+\label{sec:conclusion}
+This template compiles end-to-end with XeLaTeX and BibTeX. Replace the placeholder text,
+figures, and references with your own content before submission. Check the target
+Transactions' Information for Authors for page limits, reference style, and supplementary
+material requirements.
+
+% ------------------------- 附录（可选，不需要就删掉整段） -------------------------
+\appendices
+\section{Derivation of the Weighted Sum}
+\label{app:derivation}
+Expand (1) term by term to obtain the full derivation used in Section~\ref{sec:method}.
+
+% ------------------------- 参考文献 -------------------------
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+% ------------------------- 作者简介（可选，投稿时按需填） -------------------------
+% \begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{photo1}}]{San Zhang}
+% Bio text here.
+% \end{IEEEbiography}
+
+\end{document}
