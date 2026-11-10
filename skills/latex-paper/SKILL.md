@@ -19,6 +19,7 @@ description: "LaTeX 论文排版：7 套现成模板（中文课程论文/实验
 <技能目录>\
 ├─ templates\<模板名>\      main.tex + refs.bib（7 套，唯一底稿）
 ├─ scripts\build.ps1        一键编译脚本
+├─ scripts\parse_log.ps1    日志诊断解析（文件:行号: 说明）
 ├─ references\              模板选择、报错排查、中文排版、英文字体
 └─ output\                  产物：<文件夹名>.pdf / <文件夹名>.log（首次运行自动创建）
 ```
@@ -67,7 +68,7 @@ description: "LaTeX 论文排版：7 套现成模板（中文课程论文/实验
    powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $Skill 'scripts\build.ps1') $dst
    ```
    成功：终端打印「[OK] 页数 N，耗时 …」+ PDF 绝对路径。
-   失败：终端直接列出 log 里所有 `!` 开头的错误行和 `main.tex:行号`，log 已写到 `output\<文件夹名>.log`。
+   失败：终端直接列出 log 里所有 `!` 开头的错误行和 `main.tex:行号`，log 已写到 `output\<文件夹名>.log`。加 `-Parse` 可拿到「main.tex:51: 未定义文献：xxx」这类能直接跳转的条目。
 
 4. **产物**：`<技能目录>\output\<文件夹名>.pdf`（同名覆盖，只留最新一份），log 同名。交付时用 `computer://` 链接直接给用户这个 PDF。作业目录里会留一个 `main.pdf`（脚本只清中间文件、不删它），属正常，不要去删 `main.tex` 旁边的产物文件；以 `output\` 那份为准。
 
@@ -82,9 +83,18 @@ description: "LaTeX 论文排版：7 套现成模板（中文课程论文/实验
 .\scripts\build.ps1 'D:\...\我的作业'      # 按目录路径（作业目录用这个）
 .\scripts\build.ps1 -All                  # 依次编译 templates 下全部 7 套，出汇总表
 .\scripts\build.ps1 cn-cumcm -KeepAux     # 保留 .aux/.log/.bcf 等中间文件，排错用
+.\scripts\build.ps1 'D:\...\我的作业' -Parse           # 输出「文件:行号: 说明」结构化诊断
+.\scripts\build.ps1 'D:\...\我的作业' -Watch           # 监听保存，自动重编译 + SumatraPDF 预览
+.\scripts\build.ps1 'D:\...\我的作业' -Watch -NoViewer # 只监听重编译，不开窗口（agent 用）
+.\scripts\parse_log.ps1 output\我的作业.log            # 单独解析已有日志
+.\scripts\parse_log.ps1 output\我的作业.log -Json      # 输出 JSON，便于程序消费
 ```
 
 脚本内部：`xelatex` → 有 `main.bcf` 跑 `biber main`、`main.aux` 含 `\bibdata` 跑 `bibtex main`、都没有则跳过 → `xelatex` ×2 → 复制 PDF/log 到 `output\` → 清中间文件。退出码 0 成功、1 失败。
+
+**`-Parse` 诊断格式**：分「必须修」（编译错误、未定义引用、未定义文献）和「建议看」（Overfull/Underfull 溢出），每条都是 `文件:行号: 说明`。未定义引用/文献会给键名和页码，并回源码定位到实际使用的那一行；子文件里的问题也能定位到子文件。第 1 遍就失败时自动过滤引用类噪声（此时 `.aux` 尚未生成）。
+
+**`-Watch` 监听**：保存 `.tex/.bib/.cls/.sty/.bst/图片` 后约 1 s 内自动重编译并刷新诊断；不加 `-NoViewer` 时尝试拉起 SumatraPDF（随 PDF 更新自动刷新），没装则提示跳过、不影响编译。`Ctrl+C` 结束。与 `-All` 互斥。
 
 ## 六、用户给题目和数据时的做法
 

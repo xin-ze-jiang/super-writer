@@ -19,6 +19,18 @@
 .EXAMPLE
     .\build.ps1 -All
     依次编译全部模板并输出汇总表
+
+.EXAMPLE
+    .\build.ps1 'D:\作业\论文' -Parse
+    编译后输出「文件:行号: 说明」结构化诊断，便于 agent 直接定位
+
+.EXAMPLE
+    .\build.ps1 'D:\作业\论文' -Watch
+    监听 .tex/.bib/图片改动自动重编译，并打开 SumatraPDF 预览（需已安装）
+
+.EXAMPLE
+    .\build.ps1 'D:\作业\论文' -Watch -NoViewer
+    只监听重编译、不开预览窗口，适合 agent 或终端里跑
 #>
 [CmdletBinding()]
 param(
@@ -27,10 +39,21 @@ param(
 
     [switch]$All,
 
-    [switch]$KeepAux
+    [switch]$KeepAux,
+
+    [switch]$Parse,
+
+    [switch]$Watch,
+
+    [switch]$NoViewer
 )
 
 $ErrorActionPreference = 'Stop'
+
+$script:ShowDiag = $Parse.IsPresent -or $Watch.IsPresent
+
+$ParserPath = Join-Path $PSScriptRoot 'parse_log.ps1'
+if (Test-Path -LiteralPath $ParserPath) { . $ParserPath }
 
 $Root    = Split-Path -Parent $PSScriptRoot
 $TplRoot = Join-Path $Root 'templates'
@@ -74,6 +97,86 @@ function Get-LogErrors {
         $result.Add('（日志中没有以 ! 开头的错误行，请查看 main.log 末尾）')
     }
     return $result.ToArray()
+}
+
+# 输出结构化诊断（错误 / 未定义引用 / 排版溢出）
+function Write-Diagnostics {
+    param(
+        [string]$LogPath,
+        [switch]$SkipRefs
+    )
+
+    if (-not (Get-Command Get-LatexDiagnostics -ErrorAction SilentlyContinue)) {
+        Get-LogErrors -LogPath $LogPath | ForEach-Object { Write-Host "  $_" -ForegroundColor Red }
+        return
+    }
+
+    $diag = @(Get-LatexDiagnostics -Path $LogPath -BaseDir (Split-Path -Parent $LogPath))
+    # 第 1 遍就失败时，.aux 还没生成，未定义引用/文献都是必然噪声，直接过滤
+    if ($SkipRefs) {
+        $diag = @($diag | Where-Object { $_.Kind -ne 'ref' -and $_.Kind -ne 'cite' })
+    }
+    $section = ''
+    foreach ($line in (Format-LatexDiagnostics -Diagnostics $diag)) {
+        if ($line -like '必须修*') {
+            $section = 'must'
+            Write-Host "  $line" -ForegroundColor Red
+        }
+        elseif ($line -like '建议看*') {
+            $section = 'info'
+            Write-Host "  $line" -ForegroundColor Yellow
+        }
+        elseif ($section -eq 'must') {
+            Write-Host "  $line" -ForegroundColor Red
+        }
+        elseif ($section -eq 'info') {
+            Write-Host "  $line" -ForegroundColor DarkYellow
+        }
+        else {
+            Write-Host "  $line" -ForegroundColor Green
+        }
+    }
+}
+
+# 取目录内源文件的最新修改时间，用于监听模式判断是否有改动
+function Get-WatchStamp {
+    param([string]$Dir)
+
+    $files = Get-ChildItem -LiteralPath $Dir -Recurse -File -ErrorAction SilentlyContinue |
+             Where-Object {
+                 $_.Name -ne 'main.pdf' -and
+                 $_.Extension -match '^\.(tex|bib|cls|sty|bst|png|jpe?g|eps|svg|pdf)$'
+             }
+
+    if (-not $files) { return [datetime]::MinValue }
+    return ($files | Measure-Object -Property LastWriteTimeUtc -Maximum).Maximum
+}
+
+# 打开 SumatraPDF 预览（它会随 PDF 文件更新自动刷新；找不到就跳过）
+function Start-PdfPreview {
+    param([string]$PdfPath)
+
+    $candidates = @()
+    foreach ($base in @($env:LOCALAPPDATA, $env:ProgramFiles, ${env:ProgramFiles(x86)})) {
+        if ($base) { $candidates += (Join-Path $base 'SumatraPDF\SumatraPDF.exe') }
+    }
+
+    $exe = $candidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+    if (-not $exe) {
+        $exe = (Get-Command 'SumatraPDF.exe' -ErrorAction SilentlyContinue).Source
+    }
+
+    if (-not $exe) {
+        Write-Host '  未找到 SumatraPDF，跳过预览窗口（可手动打开 output 里的 PDF）' -ForegroundColor Yellow
+        return
+    }
+    if (-not (Test-Path -LiteralPath $PdfPath)) {
+        Write-Host '  首次编译未产出 PDF，暂不打开预览' -ForegroundColor Yellow
+        return
+    }
+
+    Start-Process -FilePath $exe -ArgumentList ('"{0}"' -f $PdfPath) | Out-Null
+    Write-Host ("  预览窗口：{0}" -f $exe) -ForegroundColor DarkGray
 }
 
 # 失败时把这次编译的日志写到 output，便于事后排错
@@ -146,8 +249,13 @@ function Compile-Template {
         $result.Seconds = [math]::Round($stopwatch.Elapsed.TotalSeconds, 1)
         $result.Message = 'xelatex 第 1 遍失败'
         Publish-FailureLog -LogPath $log -Name $name
-        Write-Host "  编译失败（exit=$code），错误行：" -ForegroundColor Red
-        Get-LogErrors -LogPath $log | ForEach-Object { Write-Host "  $_" -ForegroundColor Red }
+        Write-Host "  编译失败（exit=$code）：" -ForegroundColor Red
+        if ($script:ShowDiag) {
+            Write-Diagnostics -LogPath $log -SkipRefs
+        }
+        else {
+            Get-LogErrors -LogPath $log | ForEach-Object { Write-Host "  $_" -ForegroundColor Red }
+        }
         return $result
     }
 
@@ -187,8 +295,13 @@ function Compile-Template {
             $result.Seconds = [math]::Round($stopwatch.Elapsed.TotalSeconds, 1)
             $result.Message = ("xelatex 第 {0} 遍失败" -f $pass)
             Publish-FailureLog -LogPath $log -Name $name
-            Write-Host ("  编译失败（exit={0}），错误行：" -f $code) -ForegroundColor Red
-            Get-LogErrors -LogPath $log | ForEach-Object { Write-Host "  $_" -ForegroundColor Red }
+            Write-Host ("  编译失败（exit={0}）：" -f $code) -ForegroundColor Red
+            if ($script:ShowDiag) {
+                Write-Diagnostics -LogPath $log
+            }
+            else {
+                Get-LogErrors -LogPath $log | ForEach-Object { Write-Host "  $_" -ForegroundColor Red }
+            }
             return $result
         }
     }
@@ -213,6 +326,10 @@ function Compile-Template {
 
     Write-Host ("  [OK] 页数 {0}，耗时 {1} s" -f $result.Pages, $result.Seconds) -ForegroundColor Green
     Write-Host ("  PDF : {0}" -f $outPdf) -ForegroundColor Green
+
+    if ($script:ShowDiag) {
+        Write-Diagnostics -LogPath $log
+    }
 
     # ---------- 清理 ----------
     if (-not $KeepAux) {
@@ -257,9 +374,42 @@ elseif ($Target) {
     }
 }
 else {
-    Write-Host '用法： .\build.ps1 <模板名|目录路径> [-KeepAux]' -ForegroundColor Yellow
+    Write-Host '用法： .\build.ps1 <模板名|目录路径> [-KeepAux] [-Parse] [-Watch [-NoViewer]]' -ForegroundColor Yellow
     Write-Host '       .\build.ps1 -All' -ForegroundColor Yellow
     exit 1
+}
+
+# ======================= 监听模式 =======================
+if ($Watch) {
+    if ($targets.Count -ne 1) {
+        throw '-Watch 只支持单个目录，不能和 -All 一起使用'
+    }
+
+    $dir    = $targets[0]
+    $name   = Split-Path -Leaf $dir
+    $outPdf = Join-Path $OutRoot ('{0}.pdf' -f $name)
+
+    Write-Host ''
+    Write-Host '监听模式：保存 .tex/.bib/图片后自动重编译，Ctrl+C 结束' -ForegroundColor Cyan
+
+    $null = Compile-Template -Dir $dir
+
+    if (-not $NoViewer) {
+        Start-PdfPreview -PdfPath $outPdf
+    }
+
+    $stamp = Get-WatchStamp -Dir $dir
+    while ($true) {
+        Start-Sleep -Milliseconds 800
+        $now = Get-WatchStamp -Dir $dir
+        if ($now -le $stamp) { continue }
+
+        # 短暂等待，避免编辑器连续写盘触发多次编译
+        Start-Sleep -Milliseconds 400
+        $stamp = Get-WatchStamp -Dir $dir
+        Write-Host ('--- {0:HH:mm:ss} 检测到改动 ---' -f (Get-Date)) -ForegroundColor DarkGray
+        $null = Compile-Template -Dir $dir
+    }
 }
 
 $results = @()
