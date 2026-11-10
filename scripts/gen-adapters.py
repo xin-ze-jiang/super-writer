@@ -126,7 +126,7 @@ def build_files(skills):
 
     out["cursor/super-writer.mdc"] = (
         "---\n"
-        "description: 本仓库的三个技能（%s）：LaTeX 论文排版、赛级 PPT 生成、中文 AI 绘画提示词。需要排版论文/做答辩 PPT/写绘图提示词时按需读取对应技能目录下的 SKILL.md。\n"
+        "description: super-writer 的三个技能（%s）：LaTeX 论文排版、赛级 PPT 生成、中文 AI 绘画提示词。需要排版论文/做答辩 PPT/写绘图提示词时按需读取对应技能目录下的 SKILL.md。\n"
         "alwaysApply: false\n"
         "---\n\n" % names
     ) + (
@@ -197,7 +197,7 @@ def build_files(skills):
     )
 
     out["README.md"] = (
-        "# adapters/ · 各 AI 工具的适配文件\n\n" + HEADER_NOTE + "\n" +
+        "# super-writer · adapters/（各 AI 工具的适配文件）\n\n" + HEADER_NOTE + "\n" +
         "`SKILL.md` 是唯一内容源；本目录只是同一份内容的「换格式」产物，供不支持技能目录、\n"
         "或希望用常驻规则/指令驱动工具的场景使用。\n\n"
         "| 文件 | 放哪 | 谁用 |\n"

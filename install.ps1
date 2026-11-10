@@ -1,6 +1,6 @@
 ﻿<#
 .SYNOPSIS
-  把本仓库的技能安装到主流 AI 工具的配置目录。
+  super-writer：把技能安装到主流 AI 工具的配置目录。
 
 .DESCRIPTION
   技能以目录形式分发，核心是目录根下的 SKILL.md。

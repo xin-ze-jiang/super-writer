@@ -1,6 +1,6 @@
-# Trae Skills 合集
+# super-writer
 
-三个自制的 Trae 技能，围绕「写论文 / 做 PPT / 写绘图提示词」三件日常事。每个技能都是自包含目录，装进 Trae 的技能目录就能用。
+给主流 AI 编程工具用的一组技能：LaTeX 论文排版、赛级 PPT 生成、中文 AI 绘画提示词。每个技能都是自包含目录，复制进去就能用。
 
 ## 1. 仓库是什么
 
@@ -71,7 +71,7 @@ Get-ChildItem "$HOME\.trae-cn\skills\latex-paper"
 
 ## 3. 跨工具安装（Claude Code / Cursor / Codex / Cline / Gemini / Copilot / Windsurf）
 
-本仓库的技能就是标准 `SKILL.md` 目录：Claude Code、Trae、Cursor、Cline、Gemini CLI、GitHub Copilot、Windsurf 都能直接读，安装动作就是把整个技能目录复制到对应位置（`scripts/`、`templates/`、`references/` 一起带走）。OpenAI Codex CLI 以 `AGENTS.md` 为主，脚本会额外追加索引并把技能放到 `~/.agents/skills/`（多工具共用目录）。
+super-writer 的技能就是标准 `SKILL.md` 目录：Claude Code、Trae、Cursor、Cline、Gemini CLI、GitHub Copilot、Windsurf 都能直接读，安装动作就是把整个技能目录复制到对应位置（`scripts/`、`templates/`、`references/` 一起带走）。OpenAI Codex CLI 以 `AGENTS.md` 为主，脚本会额外追加索引并把技能放到 `~/.agents/skills/`（多工具共用目录）。
 
 一条命令装完：
 
@@ -296,7 +296,7 @@ cp -Rf skills/latex-paper skills/sj-ppt skills/promptlab ~/.trae-cn/skills/
 ## 10. 目录结构
 
 ```
-skills-repo/
+super-writer/
 ├─ README.md
 ├─ LICENSE
 ├─ .gitignore

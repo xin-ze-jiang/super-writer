@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 把本仓库的技能安装到主流 AI 工具的配置目录（macOS / Linux / WSL）。
+# super-writer：把技能安装到主流 AI 工具的配置目录（macOS / Linux / WSL）。
 #
 # 用法：
 #   ./install.sh                       # auto：只装检测到的工具

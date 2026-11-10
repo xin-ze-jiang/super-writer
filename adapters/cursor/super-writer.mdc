@@ -1,5 +1,5 @@
 ---
-description: 本仓库的三个技能（latex-paper、promptlab、sj-ppt）：LaTeX 论文排版、赛级 PPT 生成、中文 AI 绘画提示词。需要排版论文/做答辩 PPT/写绘图提示词时按需读取对应技能目录下的 SKILL.md。
+description: super-writer 的三个技能（latex-paper、promptlab、sj-ppt）：LaTeX 论文排版、赛级 PPT 生成、中文 AI 绘画提示词。需要排版论文/做答辩 PPT/写绘图提示词时按需读取对应技能目录下的 SKILL.md。
 alwaysApply: false
 ---
 

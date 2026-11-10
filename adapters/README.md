@@ -1,4 +1,4 @@
-# adapters/ · 各 AI 工具的适配文件
+# super-writer · adapters/（各 AI 工具的适配文件）
 
 > 本文件由 `scripts/gen-adapters.py` 从 `skills/*/SKILL.md` 自动生成，请勿手工编辑。
 > 改技能请改 `SKILL.md`，然后运行 `python scripts/gen-adapters.py`。

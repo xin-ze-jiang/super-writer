@@ -35,7 +35,7 @@ description: 做什么 + 什么时候用   # 必填，建议 <1024 字符，不�
 ---
 ```
 
-其余字段（`license`、`allowed-tools`、`disable-model-invocation` 等）均为可选，各工具支持程度不一，本仓库只用 `name` + `description`，保证全平台可读。
+其余字段（`license`、`allowed-tools`、`disable-model-invocation` 等）均为可选，各工具支持程度不一，super-writer 只用 `name` + `description`，保证全平台可读。
 
 ### 各单文件格式
 
@@ -49,7 +49,7 @@ description: 做什么 + 什么时候用   # 必填，建议 <1024 字符，不�
 | `GEMINI.md` | 无 frontmatter | 全局 + 项目层级合并 |
 | Windsurf `global_rules.md` | 无 frontmatter | 始终生效，6000 字符硬上限 |
 
-## 三、本仓库据此采用的策略
+## 三、super-writer 据此采用的策略
 
 1. **`skills/*/SKILL.md` 是唯一内容源**，不维护第二份正文。
 2. **6/7 个工具原生支持 SKILL.md 目录**（Claude、Trae、Cursor、Cline、Gemini、Copilot、Windsurf），所以安装脚本的主动作是**复制整个技能目录**，脚本、模板、references 一起带过去。
