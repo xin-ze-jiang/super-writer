@@ -679,7 +679,7 @@ def main():
         print("用法: python build_pptx.py deck.json out.pptx")
         sys.exit(1)
     in_path, out_path = sys.argv[1], sys.argv[2]
-    deck = json.load(open(in_path, encoding="utf-8"))
+    deck = json.load(open(in_path, encoding="utf-8-sig"))
     deck_dir = os.path.dirname(os.path.abspath(in_path))
     style, reason = pick_style(deck)
     th = STYLES[style]

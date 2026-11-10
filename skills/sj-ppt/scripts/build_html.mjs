@@ -10,7 +10,7 @@ if (!inPath || !outPath) {
   process.exit(1);
 }
 
-const deck = JSON.parse(fs.readFileSync(inPath, "utf8"));
+const deck = JSON.parse(fs.readFileSync(inPath, "utf8").replace(/^\uFEFF/, ""));
 const deckDir = path.dirname(path.resolve(inPath));
 
 /* ---------- 共用 8pt 网格与字号阶梯（风格只覆盖变量） ---------- */
