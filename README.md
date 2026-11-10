@@ -69,7 +69,59 @@ Get-ChildItem "$HOME\.trae-cn\skills\latex-paper"
 
 技能在**新建对话**时扫描加载，装完需要开个新对话才生效。
 
-## 3. 怎么被触发
+## 3. 跨工具安装（Claude Code / Cursor / Codex / Cline / Gemini / Copilot / Windsurf）
+
+本仓库的技能就是标准 `SKILL.md` 目录：Claude Code、Trae、Cursor、Cline、Gemini CLI、GitHub Copilot、Windsurf 都能直接读，安装动作就是把整个技能目录复制到对应位置（`scripts/`、`templates/`、`references/` 一起带走）。OpenAI Codex CLI 以 `AGENTS.md` 为主，脚本会额外追加索引并把技能放到 `~/.agents/skills/`（多工具共用目录）。
+
+一条命令装完：
+
+```powershell
+# Windows（在仓库根目录执行）
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Target auto
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Target all
+```
+
+```bash
+# macOS / Linux
+./install.sh --target auto          # 只装本机检测到的工具
+./install.sh --target all           # 全装，缺目录就创建
+./install.sh --target claude,cursor # 指定多个
+```
+
+`-Target` / `--target` 取值：`all`、`auto`（默认）、`claude`、`trae`、`cursor`、`codex`、`cline`、`gemini`、`copilot`、`windsurf`。`auto` 按配置目录是否存在判断，会打印装到哪、跳过哪些；重复执行原地覆盖，不产生重复目录；`output/`、`out/`、`__pycache__/` 等本地产物不会被复制。
+
+| 工具 | 安装路径（用户级） | 方式 | 脚本还是手动 |
+|---|---|---|---|
+| Trae | `~/.trae-cn/skills/<技能名>/`（国际版 `~/.trae/skills/`） | 复制整个技能目录 | 脚本 |
+| Claude Code | `~/.claude/skills/<技能名>/` | 复制整个技能目录 | 脚本 |
+| Cursor | `~/.cursor/skills/<技能名>/` | 复制整个技能目录 | 脚本 |
+| Codex CLI | `~/.agents/skills/<技能名>/` + 追加 `~/.codex/AGENTS.md` | 复制目录 + 单文件索引 | 脚本 |
+| Cline | `~/.cline/skills/<技能名>/` | 复制整个技能目录 | 脚本 |
+| Gemini CLI | `~/.gemini/skills/<技能名>/` | 复制整个技能目录 | 脚本 |
+| GitHub Copilot | `~/.copilot/skills/<技能名>/` | 复制整个技能目录 | 脚本 |
+| Windsurf | `~/.codeium/windsurf/skills/<技能名>/` | 复制整个技能目录 | 脚本 |
+
+项目级（只对当前仓库生效）需要手动放单文件规则，文件在 `adapters/`：
+
+| 工具 | 放哪 | 文件 |
+|---|---|---|
+| Cursor Rules | `.cursor/rules/` | `adapters/cursor/super-writer.mdc`（必须是 `.mdc`） |
+| Codex / 通用 | 项目根 `AGENTS.md` | `adapters/codex/AGENTS.md`（Cline / Copilot / Windsurf / Gemini 也读） |
+| Cline Rules | `.clinerules/` 或 `.cline/rules/` | `adapters/cline/super-writer.md` |
+| Gemini CLI | 项目根 `GEMINI.md` | `adapters/gemini/GEMINI.md` |
+| GitHub Copilot | `.github/copilot-instructions.md`、`.github/instructions/` | `adapters/copilot/` 下两个位置各放对应文件 |
+| Windsurf | `.windsurf/rules/` | `adapters/windsurf/rules-snippet.md` |
+
+`adapters/` 里的内容不是第二份正文，而是从 `skills/*/SKILL.md` 提取「何时用 / 关键命令 / 产物」生成的索引。改完技能后刷新：
+
+```bash
+python scripts/gen-adapters.py           # 重新生成 adapters/
+python scripts/gen-adapters.py --check   # 只检查是否过期
+```
+
+各工具路径、frontmatter 要求与查证来源见 [docs/cross-tool-support.md](docs/cross-tool-support.md)（查证日期 2026-11-10）。
+
+## 4. 怎么被触发
 
 ### 自动命中
 
@@ -91,9 +143,9 @@ Get-ChildItem "$HOME\.trae-cn\skills\latex-paper"
 /promptlab
 ```
 
-## 4. 每个技能怎么用
+## 5. 每个技能怎么用
 
-### 4.1 latex-paper
+### 5.1 latex-paper
 
 **能做什么**：选题材 → 复制模板 → 改 `main.tex` 和 `refs.bib` → 一键编译出 PDF；顺带排查 LaTeX 报错、改字号/页边距/行距/参考文献样式。
 
@@ -116,7 +168,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "$Skill\scripts\build.ps1" '
 
 **需要你提供**：题材（中文/英文、课程论文/竞赛/毕业论文/投稿）、学校或会议的格式要求（有就发，没有用模板默认）、正文与数据、参考文献条目。
 
-### 4.2 sj-ppt
+### 5.2 sj-ppt
 
 **能做什么**：把内容写进一个 `deck.json`，生成两版交付：单文件 HTML（可直接全屏演示、带动效）和可编辑 `.pptx`（老师能打开改）。内置 5 套赛级风格和静态检查脚本。
 
@@ -145,7 +197,7 @@ pip install python-pptx lxml
 
 **需要你提供**：场合、页数、汇报时长、有没有学校模板或校徽、风格取向；以及每页的真实数据和文案（缺的页脚本会用占位，交付时会标出来）。
 
-### 4.3 promptlab
+### 5.3 promptlab
 
 **能做什么**：按「主体 → 动作与构图 → 镜头 → 光线 → 材质风格 → 氛围 → 画幅」七段式写中文提示词，先定一致性锚点（角色卡/世界卡），再逐页只改变化部分；自带自检脚本查空话、维度冲突、画幅缺失。
 
@@ -167,13 +219,13 @@ python scripts/check_prompt.py --lang zh < prompt.txt
 
 **需要你提供**：画幅（竖版 3:4 / 方图 1:1 / 横版 16:9）、目标工具（默认即梦）、数量（单图 / 系列几张 / 绘本几页），以及主体是谁、在做什么。
 
-## 5. 依赖与安装
+## 6. 依赖与安装
 
 | 依赖 | 版本 | 用在哪 | 缺了会怎样 |
 |---|---|---|---|
 | TeX Live | 2026 full scheme | latex-paper | 编译直接失败：`xelatex: 无法将...识别为 cmdlet`。装完整版，别用 MiKTeX 替代 |
 | `xelatex` / `bibtex` / `biber` 在 PATH | 随 TeX Live | latex-paper | 装了 TeX Live 但没进 PATH 同样报找不到命令（Windows 默认路径形如 `D:\texlive\2026\bin\windows`） |
-| PowerShell | 5.1+ | latex-paper 的 `build.ps1` | 脚本跑不起来。macOS/Linux 需装 `pwsh`，或改用第 6 节的手动编译命令 |
+| PowerShell | 5.1+ | latex-paper 的 `build.ps1` | 脚本跑不起来。macOS/Linux 需装 `pwsh`，或改用第 7 节的手动编译命令 |
 | Node.js | 18+ | sj-ppt 生成 HTML | `node: command not found`；`build_html.mjs` 用 ESM，低于 18 会报语法错 |
 | Python | 3.8+ | sj-ppt 生成 pptx；promptlab 自检 | 脚本无法启动 |
 | `python-pptx`、`lxml` | 最新 | sj-ppt 生成 pptx | `ModuleNotFoundError: No module named 'pptx'`。pip 装即可 |
@@ -184,7 +236,7 @@ PATH 临时补法（不想改系统环境变量时，当前窗口有效）：
 $env:PATH = 'D:\texlive\2026\bin\windows;' + $env:PATH
 ```
 
-## 6. 不用技能也能用
+## 7. 不用技能也能用
 
 模板就是普通 `.tex` 文件，不装技能、不经过 AI 也能编译：
 
@@ -204,7 +256,7 @@ xelatex main.tex
 
 sj-ppt 的两个脚本也是普通命令行程序，`node scripts/build_html.mjs 你的deck.json 输出.html` 即可，不必经过对话。promptlab 的 `check_prompt.py` 同样可以单独跑。
 
-## 7. 更新方式
+## 8. 更新方式
 
 技能不会被自动同步，更新要手动做两步：
 
@@ -227,7 +279,7 @@ cp -Rf skills/latex-paper skills/sj-ppt skills/promptlab ~/.trae-cn/skills/
 
 复制完开新对话生效。注意 `cp -R` 不会删掉旧版本里已删除的文件，要彻底干净就先删技能目录再复制。
 
-## 8. 常见坑
+## 9. 常见坑
 
 | 现象 | 原因 | 处理 |
 |---|---|---|
@@ -241,13 +293,24 @@ cp -Rf skills/latex-paper skills/sj-ppt skills/promptlab ~/.trae-cn/skills/
 | pptx 打开提示「需要修复」 | 未按流程生成，或手动改过 pptx | 只改 `deck.json` 再重新生成 |
 | 页数/交叉引用不对 | XeLaTeX 只跑了一遍 | 至少 `xelatex` 跑两遍（脚本已自动跑三遍） |
 
-## 9. 目录结构
+## 10. 目录结构
 
 ```
 skills-repo/
 ├─ README.md
 ├─ LICENSE
 ├─ .gitignore
+├─ install.ps1                 # Windows 一键安装
+├─ install.sh                  # macOS / Linux 一键安装
+├─ adapters/                   # 由 SKILL.md 生成的各工具规则文件（勿手改）
+│  ├─ cursor/super-writer.mdc
+│  ├─ codex/AGENTS.md
+│  ├─ cline/super-writer.md
+│  ├─ gemini/GEMINI.md
+│  ├─ copilot/copilot-instructions.md + instructions/
+│  └─ windsurf/rules-snippet.md
+├─ docs/cross-tool-support.md  # 各工具路径与格式核实结论（2026-11-10）
+├─ scripts/gen-adapters.py     # 从 SKILL.md 刷新 adapters/
 └─ skills/
    ├─ latex-paper/
    │  ├─ SKILL.md
@@ -269,6 +332,6 @@ skills-repo/
 
 编译与生成产物（`output/`、`out/`、`*.pdf`、`*.aux`、`__pycache__/` 等）已写入 `.gitignore`，不会进仓库。
 
-## 10. 许可
+## 11. 许可
 
 MIT，见 [LICENSE](LICENSE)。
