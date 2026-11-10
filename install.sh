@@ -66,7 +66,7 @@ dir_for() {
     gemini) echo "$HOME_DIR/.gemini/skills" ;;
     copilot) echo "$HOME_DIR/.copilot/skills" ;;
     windsurf) echo "$HOME_DIR/.codeium/windsurf/skills" ;;
-    deepseek) echo "$HOME_DIR/.dsh/skills" ;;
+    deepseek) echo "$HOME_DIR/.agents/skills" ;;
   esac
 }
 
@@ -112,10 +112,27 @@ update_codex_agents() {
   echo "  [OK] AGENTS.md -> $agents"
 }
 
+INSTALLED_DIRS=()
+INSTALLED_NAMES=()
+
 install_skills() {
   local name="$1"
   local dest
   dest="$(dir_for "$name")"
+  local i
+  if [ "${#INSTALLED_DIRS[@]}" -gt 0 ]; then
+    for i in "${!INSTALLED_DIRS[@]}"; do
+      if [ "${INSTALLED_DIRS[$i]}" = "$dest" ]; then
+        printf '\n[%s] %s\n' "$name" "$dest"
+        printf '  [跳过] %s 与 %s 共用 %s，已跳过重复安装\n' \
+          "${INSTALLED_NAMES[$i]}" "$name" "$dest"
+        if [ "$name" = "codex" ]; then update_codex_agents; fi
+        return 0
+      fi
+    done
+  fi
+  INSTALLED_DIRS+=("$dest")
+  INSTALLED_NAMES+=("$name")
   mkdir -p "$dest"
   printf '\n[%s] %s\n' "$name" "$dest"
   local src sn trig

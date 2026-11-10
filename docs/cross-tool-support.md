@@ -21,12 +21,14 @@
 | GitHub Copilot | 项目级 | `.github/skills/`、`.claude/skills/`、`.agents/skills/` | `.github/copilot-instructions.md`、`AGENTS.md`、`.github/instructions/**/*.instructions.md` | 是 |
 | Windsurf | 用户级 | `~/.codeium/windsurf/skills/<name>/` | `~/.codeium/windsurf/memories/global_rules.md`（单文件、始终生效、≤6000 字符） | 技能可多目录；global_rules 只能一个文件 |
 | Windsurf | 项目级 | `.windsurf/skills/<name>/`、`.agents/skills/` | `.windsurf/rules/*.md`（单文件 ≤12000 字符）、任意 `AGENTS.md` | 是 |
-| DeepSeek Harness | 用户级 | `~/.dsh/skills/<name>/SKILL.md`（`$DSH_HOME/skills`），其次 `~/.agents/skills/` | 无独立规则文件（技能即规则） | 是：目录内可带 `references/`、`scripts/` |
+| DeepSeek Harness | 用户级 | `~/.agents/skills/<name>/SKILL.md`（与 Codex 共用，装一份即可）；dsh 另优先读 `~/.dsh/skills/`（`$DSH_HOME/skills`） | 无独立规则文件（技能即规则） | 是：目录内可带 `references/`、`scripts/` |
 | DeepSeek Harness | 项目级 | `<项目根>/.dsh/skills/<name>/SKILL.md`（第一优先），其次 `.agents/skills/` | 无独立规则文件 | 是 |
 
 > Trae 没有公开的技能规范文档，表中路径按本机实际安装目录（`~/.trae-cn/skills/`、`~/.trae/skills/`）记录，不是查证来的。
 >
 > DeepSeek Harness（`dsh`）为 2026-08 发布的开发者预览，仍在演进；技能发现顺序为 `.dsh/skills` → `.agents/skills` → 自定义目录 → `~/.dsh/skills` → `~/.agents/skills`，只扫描根下直接子项，嵌套的 `**/SKILL.md` 不会被发现。
+>
+> DeepSeek 与 Codex 共用 `~/.agents/skills/`，`install.ps1` / `install.sh` 装一份即可，同时指定两个目标时会自动去重。注意 dsh 的 `~/.dsh/skills` 优先级更高：若两处都有同名技能，dsh 优先读 `~/.dsh/skills`，旧版本残留可能盖住新装的那份。
 
 ## 二、frontmatter 要求
 

@@ -71,7 +71,7 @@ Get-ChildItem "$HOME\.claude\skills\latex-paper"
 
 ## 3. 跨工具安装（Claude Code / Cursor / Codex / Cline / Gemini / Copilot / Windsurf / DeepSeek）
 
-super-writer 的技能就是标准 `SKILL.md` 目录：Claude Code、DeepSeek Harness、Trae、Cursor、Cline、Gemini CLI、GitHub Copilot、Windsurf 都能直接读，安装动作就是把整个技能目录复制到对应位置（`scripts/`、`templates/`、`references/` 一起带走）。OpenAI Codex CLI 以 `AGENTS.md` 为主，脚本会额外追加索引并把技能放到 `~/.agents/skills/`（多工具共用目录）。
+super-writer 的技能就是标准 `SKILL.md` 目录：Claude Code、DeepSeek Harness、Trae、Cursor、Cline、Gemini CLI、GitHub Copilot、Windsurf 都能直接读，安装动作就是把整个技能目录复制到对应位置（`scripts/`、`templates/`、`references/` 一起带走）。OpenAI Codex CLI 以 `AGENTS.md` 为主，脚本会额外追加索引并把技能放到 `~/.agents/skills/`（多工具共用目录）。DeepSeek Harness 与 Codex 共用 `~/.agents/skills/`，装一份即可，脚本会自动去重。
 
 一条命令装完：
 
@@ -100,7 +100,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Target all
 | Gemini CLI | `~/.gemini/skills/<技能名>/` | 复制整个技能目录 | 脚本 |
 | GitHub Copilot | `~/.copilot/skills/<技能名>/` | 复制整个技能目录 | 脚本 |
 | Windsurf | `~/.codeium/windsurf/skills/<技能名>/` | 复制整个技能目录 | 脚本 |
-| DeepSeek Harness | `~/.dsh/skills/<技能名>/`（也原生读 `~/.agents/skills/`） | 复制整个技能目录 | 脚本 |
+| DeepSeek Harness | `~/.agents/skills/<技能名>/`（与 Codex 共用，装一份即可） | 复制整个技能目录 | 脚本 |
 
 项目级（只对当前仓库生效）需要手动放单文件规则，文件在 `adapters/`：
 

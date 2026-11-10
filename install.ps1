@@ -13,7 +13,7 @@
     gemini   ~/.gemini/skills
     copilot  ~/.copilot/skills
     windsurf ~/.codeium/windsurf/skills
-    deepseek ~/.dsh/skills（DeepSeek Harness；也原生读 ~/.agents/skills）
+    deepseek ~/.agents/skills（DeepSeek Harness，与 Codex 共用；dsh 优先读 ~/.dsh/skills）
 
 .PARAMETER Target
   all | auto | claude | trae | cursor | codex | cline | gemini | copilot | windsurf | deepseek
@@ -105,15 +105,33 @@ $Specs['windsurf'] = @{
 }
 $Specs['deepseek'] = @{
     Label  = 'DeepSeek Harness'
-    Dir    = Join-Path $UserHome '.dsh\skills'
+    # 与 Codex 共用同一技能目录，装一份即可；检测仍看 ~/.dsh
+    Dir    = Join-Path $UserHome '.agents\skills'
     Detect = @((Join-Path $UserHome '.dsh'))
 }
+
+$script:InstalledDirs = @{}
 
 function Install-Skills {
     param([string]$Name)
 
     $spec = $Specs[$Name]
     $dest = $spec.Dir
+    $destKey = $dest.TrimEnd('\')
+
+    # 去重：多个目标解析到同一目录时只复制一次
+    foreach ($k in @($script:InstalledDirs.Keys)) {
+        if ($script:InstalledDirs[$k] -eq $destKey) {
+            Write-Host ""
+            Write-Host ("[{0}] {1}" -f $Name, $dest) -ForegroundColor Cyan
+            $pair = @($k, $Name) | Sort-Object
+            Write-Host ("  [跳过] {0} 与 {1} 共用 {2}，已跳过重复安装" -f $pair[0], $pair[1], $dest) -ForegroundColor DarkGray
+            if ($Name -eq 'codex') { Update-CodexAgents }
+            return
+        }
+    }
+    $script:InstalledDirs[$Name] = $destKey
+
     New-Item -ItemType Directory -Path $dest -Force | Out-Null
 
     Write-Host ""

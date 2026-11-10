@@ -15,7 +15,7 @@
 | `copilot/copilot-instructions.md` | `.github/copilot-instructions.md` | Copilot 仓库级指令 |
 | `copilot/instructions/*.instructions.md` | `.github/instructions/` | Copilot 按文件类型定向指令 |
 | `windsurf/rules-snippet.md` | `.windsurf/rules/` 或 `global_rules.md` | Windsurf Rules |
-| `deepseek/README.md` | 不用投放（原生读技能目录） | DeepSeek Harness 放置说明 |
+| `deepseek/README.md` | 不用投放（原生读技能目录，与 Codex 共用 `~/.agents/skills/`） | DeepSeek Harness 放置说明 |
 
 重新生成：
 

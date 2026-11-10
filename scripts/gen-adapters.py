@@ -202,7 +202,9 @@ def build_files(skills):
         "本文件只说明放置位置。\n\n"
         "放置（按 dsh 的发现优先级）：\n\n"
         "- 项目：`<项目根>/.dsh/skills/<技能名>/`（第一优先），其次 `<项目根>/.agents/skills/`\n"
-        "- 用户级：`~/.dsh/skills/<技能名>/`（`install.ps1` / `install.sh --target deepseek` 装这里），其次 `~/.agents/skills/`\n\n"
+        "- 用户级：`~/.agents/skills/<技能名>/`（`install.ps1` / `install.sh --target deepseek` 装这里，与 Codex 共用，装一份即可）；\n"
+        "  dsh 另优先读 `~/.dsh/skills/<技能名>/`，若两处都有同名技能，以 `~/.dsh/skills/` 为准。\n\n"
+        "同时指定 `codex,deepseek` 时，两个目标解析到同一目录，脚本只复制一次并提示已去重。\n\n"
         "frontmatter 只要求 `name`（kebab-case）+ `description`，与现有 `SKILL.md` 完全兼容；\n"
         "也支持根目录下平铺的 `<name>.md`，但嵌套子目录不会被发现。\n\n"
         "验证：`npx @deepseek-ai/dsh web` 启动后，在 `/` 命令面板的 Skills 组里应能看到下列技能。\n\n" +
@@ -222,7 +224,7 @@ def build_files(skills):
         "| `copilot/copilot-instructions.md` | `.github/copilot-instructions.md` | Copilot 仓库级指令 |\n"
         "| `copilot/instructions/*.instructions.md` | `.github/instructions/` | Copilot 按文件类型定向指令 |\n"
         "| `windsurf/rules-snippet.md` | `.windsurf/rules/` 或 `global_rules.md` | Windsurf Rules |\n"
-        "| `deepseek/README.md` | 不用投放（原生读技能目录） | DeepSeek Harness 放置说明 |\n\n"
+        "| `deepseek/README.md` | 不用投放（原生读技能目录，与 Codex 共用 `~/.agents/skills/`） | DeepSeek Harness 放置说明 |\n\n"
         "重新生成：\n\n```bash\npython scripts/gen-adapters.py\n```\n"
     )
     return out

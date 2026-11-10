@@ -9,7 +9,10 @@ DeepSeek Harness（`dsh`）原生读取 `SKILL.md` 技能目录，**不需要额
 放置（按 dsh 的发现优先级）：
 
 - 项目：`<项目根>/.dsh/skills/<技能名>/`（第一优先），其次 `<项目根>/.agents/skills/`
-- 用户级：`~/.dsh/skills/<技能名>/`（`install.ps1` / `install.sh --target deepseek` 装这里），其次 `~/.agents/skills/`
+- 用户级：`~/.agents/skills/<技能名>/`（`install.ps1` / `install.sh --target deepseek` 装这里，与 Codex 共用，装一份即可）；
+  dsh 另优先读 `~/.dsh/skills/<技能名>/`，若两处都有同名技能，以 `~/.dsh/skills/` 为准。
+
+同时指定 `codex,deepseek` 时，两个目标解析到同一目录，脚本只复制一次并提示已去重。
 
 frontmatter 只要求 `name`（kebab-case）+ `description`，与现有 `SKILL.md` 完全兼容；
 也支持根目录下平铺的 `<name>.md`，但嵌套子目录不会被发现。
