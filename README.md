@@ -2,6 +2,8 @@
 
 给主流 AI 编程工具用的一组技能：LaTeX 论文排版、赛级 PPT 生成、中文 AI 绘画提示词。每个技能都是自包含目录，复制进去就能用。
 
+宣传页（GitHub Pages）：<https://xin-ze-jiang.github.io/super-writer/>
+
 ## 1. 仓库是什么
 
 | 技能 | 干什么 | 依赖 | 产物形式 |
