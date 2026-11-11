@@ -26,8 +26,8 @@
 
 | 模板 | 文档类 / 选项 | 版式要点 | 文献引擎 | 预期页数（占位内容） |
 |---|---|---|---|---|
-| cn-thesis | `ctexbook[UTF8,a4paper,zihao=-4,fontset=windows,openany]` | 封面 + 中英摘要 + 目录 + 五章 + 参考文献 + 致谢 + 附录；封面不编号、摘要起罗马数字 I、正文阿拉伯数字从 1；图/表/公式按章编号（图 1-1） | bibtex + `gbt7714-numerical` | 13 |
-| cn-course-paper | `ctexart[UTF8,a4paper,zihao=-4,fontset=windows]` | A4，上下 2.54 / 左右 3.17 cm，小四宋体 1.5 倍行距，页码居中页脚 | bibtex + `gbt7714-numerical` | 2 |
+| cn-thesis | `ctexbook[UTF8,a4paper,zihao=-4,fontset=\swfontset,openany]` | 封面 + 中英摘要 + 目录 + 五章 + 参考文献 + 致谢 + 附录；封面不编号、摘要起罗马数字 I、正文阿拉伯数字从 1；图/表/公式按章编号（图 1-1） | bibtex + `gbt7714-numerical` | 13 |
+| cn-course-paper | `ctexart[UTF8,a4paper,zihao=-4,fontset=\swfontset]` | A4，上下 2.54 / 左右 3.17 cm，小四宋体 1.5 倍行距，页码居中页脚 | bibtex + `gbt7714-numerical` | 2 |
 | cn-lab-report | 同上 | 同上，`section` 编号为「一、二、」，`\labinfo{课程}{日期}{姓名}{学号}`，带 `siunitx` 单位 | bibtex + gbt7714 | 2 |
 | cn-homework | 同上 | 同上，列表用 `enumitem` | **biber** + `biblatex[style=gb7714-2015]` | 2 |
 | cn-cumcm | 同上 | 四边 2.5 cm；摘要页 `\pagenumbering{gobble}`，正文 `\pagenumbering{arabic}`；题目三号黑体、一级标题四号黑体居中 | bibtex + gbt7714 | 4 |
@@ -86,10 +86,12 @@
 
 重建原则：每套目录下只需 `main.tex` + `refs.bib`；目录名 = 模板名；入口必须叫 `main.tex`（脚本按这个名字找）。每套都必须含：占位标题、作者、摘要/关键词、一节正文、一个公式（`equation`）、一张 `booktabs` 三线表、一条 `\cite` + 对应 bib 条目。重建后跑 `build.ps1 -All`，10 套全绿才算恢复。
 
+`\swfontset` 由 `main.tex` 开头的 `\IfFileExists` 检测块决定：Windows→`windows`，macOS→`mac`，其他（Linux）→`fandol`（TeX Live 自带）。macOS / Linux 分支按 ctex 官方 fontset 名称写，未在 Windows 本机实测。
+
 | 模板 | 骨架关键行 |
 |---|---|
-| cn-thesis | `\documentclass[UTF8,a4paper,zihao=-4,fontset=windows,openany]{ctexbook}`；`geometry{top=2.54cm,bottom=2.54cm,left=3.0cm,right=3.0cm}`；`\linespread{1.5}`；封面用 `\thispagestyle{empty}`+`center`（**不要 `titlepage`**），后接 `\pagenumbering{Roman}`+`\setcounter{page}{0}`；`\renewcommand{\bibsection}{\chapter*{\bibname}\phantomsection\addcontentsline{toc}{chapter}{\bibname}}`；按章编号 6 行 `\counterwithin`+`\thefigure`；`\mainmatter` 起正文；`\appendix` 后 `\ctexset{chapter={name={附录,},number=\Alph{chapter}}}` |
-| cn-course-paper | `\documentclass[UTF8,a4paper,zihao=-4,fontset=windows]{ctexart}`；`geometry{top=2.54cm,bottom=2.54cm,left=3.17cm,right=3.17cm}`；`\linespread{1.5}`；`\pagestyle{plain}`；`\usepackage{gbt7714}`；`\bibliographystyle{gbt7714-numerical}` |
+| cn-thesis | `\documentclass[UTF8,a4paper,zihao=-4,fontset=\swfontset,openany]{ctexbook}`；`geometry{top=2.54cm,bottom=2.54cm,left=3.0cm,right=3.0cm}`；`\linespread{1.5}`；封面用 `\thispagestyle{empty}`+`center`（**不要 `titlepage`**），后接 `\pagenumbering{Roman}`+`\setcounter{page}{0}`；`\renewcommand{\bibsection}{\chapter*{\bibname}\phantomsection\addcontentsline{toc}{chapter}{\bibname}}`；按章编号 6 行 `\counterwithin`+`\thefigure`；`\mainmatter` 起正文；`\appendix` 后 `\ctexset{chapter={name={附录,},number=\Alph{chapter}}}` |
+| cn-course-paper | `\documentclass[UTF8,a4paper,zihao=-4,fontset=\swfontset]{ctexart}`；`geometry{top=2.54cm,bottom=2.54cm,left=3.17cm,right=3.17cm}`；`\linespread{1.5}`；`\pagestyle{plain}`；`\usepackage{gbt7714}`；`\bibliographystyle{gbt7714-numerical}` |
 | cn-lab-report | 同上，另加 `siunitx`；`\newcommand{\labinfo}[4]{...}` 四参数表；`\ctexset{section={name={,、},number=\chinese{section},format=\zihao{4}\heiti}}` |
 | cn-homework | 同上版式；`\usepackage[backend=biber,style=gb7714-2015]{biblatex}` + `\addbibresource{refs.bib}` + `\printbibliography[title={参考文献}]`；**不要** `\bibliographystyle` |
 | cn-cumcm | `ctexart` 同上；`geometry{top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm}`；摘要页包 `\pagenumbering{gobble}` + `\thispagestyle{empty}`，`\newpage` 后 `\pagenumbering{arabic}`；`fancyhdr` 页脚居中页码；`\ctexset{section={format=\zihao{4}\heiti,format+={\centering}}}` 之类实现四号黑体居中 |

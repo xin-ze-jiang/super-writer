@@ -13,7 +13,15 @@
 % 偏差说明：官方未提供 .cls/.sty 文件，本模板为按上述规范手工实现的社区版式，
 %          与官方 Word 模板在行距取整、标题间距上可能有 1--2 pt 差异。
 % =============================================================
-\documentclass[UTF8,a4paper,zihao=-4,fontset=windows]{ctexart}
+% ---- 中文字体集：按编译平台自动选择（不需要额外安装字体）----
+% Windows -> windows；macOS -> mac；其他（Linux）-> fandol（TeX Live 自带）
+% macOS / Linux 分支按 ctex 官方 fontset 名称写，未在 Windows 本机实测
+\IfFileExists{C:/Windows/Fonts/simsun.ttc}
+  {\def\swfontset{windows}}
+  {\IfFileExists{/System/Library/Fonts/Menlo.ttc}
+    {\def\swfontset{mac}}
+    {\def\swfontset{fandol}}}
+\documentclass[UTF8,a4paper,zihao=-4,fontset=\swfontset]{ctexart}
 
 \usepackage{geometry}
 \geometry{top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm}

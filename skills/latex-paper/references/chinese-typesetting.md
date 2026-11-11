@@ -10,7 +10,7 @@
 | 仿宋 | FangSong | 有 |
 | 微软雅黑 | Microsoft YaHei | 有 |
 
-中文模板统一 `\documentclass[...,fontset=windows]{ctexart}`，ctex 会自动指定：正文宋体、标题黑体、`\kaishu` 楷体、`\fangsong` 仿宋，不用手写字体文件路径。**中文必须 XeLaTeX。**
+中文模板统一 `\documentclass[...,fontset=\swfontset]{ctexart}`，`\swfontset` 由 `main.tex` 开头的 `\IfFileExists` 检测决定：Windows 用 `windows`，macOS 用 `mac`，其他（Linux）用 `fandol`（TeX Live 自带，不用另装字体）。ctex 会自动指定：正文宋体、标题黑体、`\kaishu` 楷体、`\fangsong` 仿宋，不用手写字体文件路径。**中文必须 XeLaTeX。**
 
 ## 2. 改字号
 
@@ -63,7 +63,7 @@
 
 | 宏包 | 用途 | 备注 |
 |---|---|---|
-| `ctex` / `ctexart` | 中文排版 | 必须 XeLaTeX + `fontset=windows` |
+| `ctex` / `ctexart` | 中文排版 | 必须 XeLaTeX + 自动判断的 `fontset`（`windows` / `mac` / `fandol`） |
 | `geometry` | 页边距 | 见上表 |
 | `amsmath` / `amssymb` / `bm` | 公式 | `equation`、`align`、`cases`、`\bm{}` 粗体向量 |
 | `booktabs` | 三线表 | `\toprule` `\midrule` `\bottomrule`，不要竖线 |

@@ -288,7 +288,7 @@ cp -Rf skills/latex-paper skills/sj-ppt skills/promptlab ~/.claude/skills/
 |---|---|---|
 | 技能装了但完全不生效 | 多套了一层目录，比如 `skills/latex-paper/latex-paper/SKILL.md` | `SKILL.md` 必须在技能目录根；目录名要与 `SKILL.md` 里的 `name` 一致（`latex-paper` / `sj-ppt` / `promptlab`） |
 | `xelatex: 无法将...识别为 cmdlet` | TeX Live 的 bin 目录没进 PATH | 用第 5 节的 `$env:PATH` 临时补，或把 `D:\texlive\2026\bin\windows` 加进系统环境变量 |
-| 编译报 `Font "SimSun" not found` 之类 | 模板用 `fontset=windows`，非 Windows 没这些字体 | 把 `main.tex` 里 `fontset=windows` 改成 `fontset=fandol`，或装对应中文字体 |
+| 编译报 `Font "SimSun" not found` 之类 | 模板字体集已按平台自动判断（Windows→`windows`，macOS→`mac`，其他→`fandol`），正常不会出现 | 已自动判断，无需手动改；若仍报错，多半是系统缺字体或自己改过 `main.tex` 开头的检测块，可显式写 `fontset=fandol`（TeX Live 自带） |
 | 中文全是乱码或 `Missing character` | `.tex` 存成了 GBK | 统一存 UTF-8（无 BOM）；`.ps1` 脚本相反，要 UTF-8 **带 BOM** |
 | 参考文献显示 `[?]` | 没跑 bibtex/biber，或 `refs.bib` 里没有对应 key | 按第 6 节顺序跑四遍；检查 `\cite{}` 的 key 与 bib 条目一致 |
 | `build.ps1` 报脚本无法加载 | 执行策略限制 | 调用时带 `-ExecutionPolicy Bypass`，或 `Set-ExecutionPolicy -Scope Process Bypass` |

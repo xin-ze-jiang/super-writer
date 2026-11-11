@@ -6,7 +6,15 @@
 % 版式： A4，上下 2.54cm、左右 3.0cm，正文小四宋体 1.5 倍行距
 % 编号： 图/表/公式按章编号（图 1-1、表 2-1、式 (3-1)）
 % =============================================================
-\documentclass[UTF8,a4paper,zihao=-4,fontset=windows,openany]{ctexbook}
+% ---- 中文字体集：按编译平台自动选择（不需要额外安装字体）----
+% Windows -> windows；macOS -> mac；其他（Linux）-> fandol（TeX Live 自带）
+% macOS / Linux 分支按 ctex 官方 fontset 名称写，未在 Windows 本机实测
+\IfFileExists{C:/Windows/Fonts/simsun.ttc}
+  {\def\swfontset{windows}}
+  {\IfFileExists{/System/Library/Fonts/Menlo.ttc}
+    {\def\swfontset{mac}}
+    {\def\swfontset{fandol}}}
+\documentclass[UTF8,a4paper,zihao=-4,fontset=\swfontset,openany]{ctexbook}
 
 \usepackage{geometry}
 \geometry{top=2.54cm,bottom=2.54cm,left=3.0cm,right=3.0cm}

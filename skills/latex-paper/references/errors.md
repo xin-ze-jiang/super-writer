@@ -12,7 +12,7 @@
 |---|---|---|
 | `! Undefined control sequence.` | 用了没加载的宏包，或命令拼错 | 看 `l.行号`；补 `\usepackage{...}` 或改拼写 |
 | `! LaTeX Error: File 'xxx.sty' not found.` | 宏包没装 | `tlmgr install xxx`（full scheme 一般都有，先 `kpsewhich xxx.sty` 确认） |
-| `! Package fontspec Error: The font "SimSun" cannot be found.` | 字体名写错或系统没装 | 中文用 `fontset=windows` 让 ctex 自己找；英文换 TeX Gyre 系列 |
+| `! Package fontspec Error: The font "SimSun" cannot be found.` | 字体名写错或系统没装 | 模板已按平台自动选字体；仍报错就显式写 `fontset=fandol`（TeX Live 自带），英文换 TeX Gyre 系列 |
 | `! Missing $ inserted.` | 数学符号写在文本模式 | 加 `$...$`；检查 `_`、`^`、`&` 误用 |
 | `! LaTeX Error: Something's wrong--perhaps a missing \item.` | 列表环境缺 `\item` | 检查 `itemize` / `enumerate` |
 | `! LaTeX Error: \begin{table} on input line N ended by \end{document}.` | 环境没闭合 | 补 `\end{table}` |
@@ -22,7 +22,7 @@
 | `I found no \citation commands` | 正文没有 `\cite` | 至少引用一次，否则文献表为空 |
 | `I didn't find a database entry for "xxx"` | bib key 拼错或条目没写 | 对齐 `refs.bib` 里的 key |
 | `! Package inputenc Error: Unicode character` | 用 pdflatex 编了中文 | 换 xelatex（本工作台脚本已固定） |
-| 中文变方块 / 乱码 | 字体缺字，或文件不是 UTF-8 | 文件存 UTF-8；用 `fontset=windows`；生僻字换字体 |
+| 中文变方块 / 乱码 | 字体缺字，或文件不是 UTF-8 | 文件存 UTF-8；模板已按平台自动选字体，仍缺字就显式 `fontset=fandol`；生僻字换字体 |
 | `! Dimension too large.` | 图片尺寸或 tikz 坐标超限 | 缩小 `width=`，检查坐标 |
 | 参考文献显示 `[?]` | 少跑一轮，或没跑 bibtex/biber | 用 `build.ps1` 重编（脚本已跑 3 遍） |
 | `Package hyperref Warning: Token not allowed in a PDF string` | 标题里有公式/命令 | 加 `\texorpdfstring{公式}{文字}` |

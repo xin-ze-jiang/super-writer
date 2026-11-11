@@ -5,7 +5,15 @@
 % 特点： 参考文献走 biber 后端（scripts\build.ps1 会自动识别 .bcf 并调用 biber）
 % 版式： A4，上下 2.54cm，左右 3.17cm，正文小四，1.5 倍行距
 % =============================================================
-\documentclass[UTF8,a4paper,zihao=-4,fontset=windows]{ctexart}
+% ---- 中文字体集：按编译平台自动选择（不需要额外安装字体）----
+% Windows -> windows；macOS -> mac；其他（Linux）-> fandol（TeX Live 自带）
+% macOS / Linux 分支按 ctex 官方 fontset 名称写，未在 Windows 本机实测
+\IfFileExists{C:/Windows/Fonts/simsun.ttc}
+  {\def\swfontset{windows}}
+  {\IfFileExists{/System/Library/Fonts/Menlo.ttc}
+    {\def\swfontset{mac}}
+    {\def\swfontset{fandol}}}
+\documentclass[UTF8,a4paper,zihao=-4,fontset=\swfontset]{ctexart}
 
 \usepackage{geometry}
 \geometry{top=2.54cm,bottom=2.54cm,left=3.17cm,right=3.17cm}

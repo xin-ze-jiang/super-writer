@@ -121,7 +121,7 @@ description: "LaTeX 论文排版：10 套现成模板（中文课程论文/实�
 ## 八、硬规则
 
 1. 不改 `templates\` 里的底稿；所有内容改动都在作业目录的副本上做。
-2. 中文必须 XeLaTeX，不许换 pdflatex；中文模板保持 `fontset=windows`。
+2. 中文必须 XeLaTeX，不许换 pdflatex；中文模板字体集按编译平台自动判断（Windows→`windows`，macOS→`mac`，其他→`fandol`），不要写死 `fontset=windows`。
 3. 不编造数据、不编造参考文献（`refs.bib` 里的示例条目必须替换或删除）。
 4. 不宣称"编译通过"除非本轮真的跑过脚本并看到 `[OK]`。
 5. 交付必须给 PDF 路径，不能只给 `.tex` 源码。
