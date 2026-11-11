@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>super-writer — 给主流 AI 工具用的技能包</title>
+<meta name="description" content="super-writer：LaTeX 论文排版、赛级 PPT 生成、中文 AI 绘画提示词。三个自包含技能目录，复制进 Claude Code、Trae、Cursor、Codex 等 9 个工具即可使用。">
+<style>
+  :root{
+    --bg:#06080c;
+    --bg-soft:#0b0f15;
+    --card:#0e141b;
+    --line:#1d2733;
+    --line-soft:#151d27;
+    --text:#e8eef6;
+    --muted:#93a3b5;
+    --dim:#6b7c8f;
+    --accent:#4ade9d;
+    --accent-2:#5ab7ff;
+    --warn:#f0b43c;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+      radial-gradient(760px 420px at 12% -8%, rgba(74,222,157,.13), transparent 62%),
+      radial-gradient(680px 400px at 92% 4%, rgba(90,183,255,.11), transparent 60%),
+      linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px);
+    background-size:auto,auto,56px 56px,56px 56px;
+    pointer-events:none;
+    z-index:0;
+  }
+  .wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 22px}
+  a{color:var(--accent-2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+  /* 顶部栏 */
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 0}
+  .brand{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:14px;color:var(--muted);letter-spacing:.02em}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px rgba(74,222,157,.9)}
+  .gh-btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:8px 14px;border:1px solid var(--line);border-radius:999px;
+    color:var(--text);font-size:13px;background:rgba(255,255,255,.02);white-space:nowrap;
+  }
+  .gh-btn:hover{border-color:#2d3d4f;text-decoration:none;background:rgba(255,255,255,.04)}
+
+  /* 首屏 */
+  .hero{padding:52px 0 34px}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--mono);font-size:12px;color:var(--accent);
+    border:1px solid rgba(74,222,157,.25);background:rgba(74,222,157,.07);
+    padding:5px 11px;border-radius:999px;margin-bottom:22px;
+  }
+  h1{
+    font-size:clamp(38px,7vw,68px);
+    line-height:1.06;letter-spacing:-.035em;margin:0 0 16px;font-weight:700;
+    background:linear-gradient(96deg,#ffffff 18%,#9fe9c9 58%,#7cc4ff 96%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .lede{font-size:clamp(15px,2.1vw,19px);color:var(--muted);max-width:720px;margin:0 0 26px}
+  .lede strong{color:var(--text);font-weight:600}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 30px;padding:0;list-style:none}
+  .chips li{
+    font-family:var(--mono);font-size:12px;color:var(--dim);
+    border:1px solid var(--line-soft);background:rgba(255,255,255,.015);
+    padding:5px 10px;border-radius:6px;
+  }
+
+  /* 安装命令 */
+  .cmd{
+    border:1px solid var(--line);border-radius:12px;overflow:hidden;
+    background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(255,255,255,0));
+    margin-bottom:14px;
+  }
+  .cmd-head{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:9px 12px;border-bottom:1px solid var(--line-soft);
+    font-family:var(--mono);font-size:12px;color:var(--dim);
+  }
+  .cmd-body{display:flex;align-items:flex-start;gap:10px;padding:13px 12px}
+  .cmd code{
+    font-family:var(--mono);font-size:13px;line-height:1.7;color:#cfe3d8;
+    display:block;overflow-x:auto;white-space:pre;flex:1;min-width:0;padding:2px 0;
+  }
+  .copy{
+    flex:none;font-family:var(--sans);font-size:12px;cursor:pointer;
+    color:var(--text);background:rgba(255,255,255,.05);
+    border:1px solid var(--line);border-radius:7px;padding:5px 10px;
+  }
+  .copy:hover{background:rgba(255,255,255,.09)}
+  .copy.done{color:#0a2018;background:var(--accent);border-color:var(--accent)}
+  .note{font-size:12.5px;color:var(--dim);margin:0 0 8px}
+  .note code{font-family:var(--mono);color:var(--muted)}
+
+  /* 章节 */
+  section{padding:52px 0 8px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:7px}
+  h2{font-size:clamp(21px,3vw,27px);margin:0;letter-spacing:-.015em}
+  .sec-num{font-family:var(--mono);font-size:12px;color:var(--accent);opacity:.85}
+  .sec-desc{color:var(--muted);font-size:14.5px;margin:0 0 24px;max-width:760px}
+
+  /* 技能卡片 */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px}
+  .card{
+    position:relative;border:1px solid var(--line);border-radius:14px;padding:20px 18px 18px;
+    background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(255,255,255,0) 46%),var(--card);
+    display:flex;flex-direction:column;gap:12px;
+    transition:transform .18s ease,border-color .18s ease;
+  }
+  .card:hover{transform:translateY(-3px);border-color:#2b3d4f}
+  .card::after{
+    content:"";position:absolute;left:18px;right:18px;top:0;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(74,222,157,.55),transparent);
+  }
+  .card-top{display:flex;align-items:center;gap:10px}
+  .icon{
+    width:32px;height:32px;flex:none;border-radius:8px;display:grid;place-items:center;
+    font-family:var(--mono);font-size:15px;color:#08130f;
+    background:linear-gradient(140deg,var(--accent),#7ee0b4);
+  }
+  .card:nth-child(2) .icon{background:linear-gradient(140deg,var(--accent-2),#9ed4ff)}
+  .card:nth-child(3) .icon{background:linear-gradient(140deg,#f0b43c,#ffd98a)}
+  .card h3{margin:0;font-size:16px;font-family:var(--mono);letter-spacing:-.01em}
+  .card p{margin:0;font-size:13.5px;color:var(--muted)}
+  .card ul{margin:0;padding-left:17px;font-size:13px;color:var(--dim)}
+  .card li{margin:3px 0}
+  .card li::marker{color:#3f566b}
+  .trigger{
+    margin-top:auto;font-size:12px;color:var(--muted);
+    border-top:1px dashed var(--line-soft);padding-top:11px;
+  }
+  .trigger span{font-family:var(--mono);color:#b9d8c9}
+
+  /* 表格 */
+  .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.012)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:620px}
+  caption{text-align:left;padding:12px 14px 0;color:var(--dim);font-size:12.5px}
+  th,td{padding:11px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line-soft)}
+  thead th{
+    font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--dim);background:rgba(255,255,255,.025);
+    white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:rgba(255,255,255,.022)}
+  td code,p code,li code{font-family:var(--mono);font-size:12.3px;color:#bfe2d2;background:rgba(74,222,157,.06);border:1px solid rgba(74,222,157,.12);padding:1px 5px;border-radius:5px;white-space:nowrap}
+  .tool{color:var(--text);font-weight:600;white-space:nowrap}
+  .tag{font-family:var(--mono);font-size:10.5px;color:var(--accent);border:1px solid rgba(74,222,157,.3);padding:1px 6px;border-radius:4px;white-space:nowrap}
+  .tag.shared{color:var(--accent-2);border-color:rgba(90,183,255,.32)}
+
+  /* 依赖 + 坑 */
+  .two-col{display:grid;grid-template-columns:1fr;gap:16px}
+  @media(min-width:900px){.two-col{grid-template-columns:1.05fr .95fr}}
+  .panel{border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.012);padding:16px 16px 6px}
+  .panel h3{margin:0 0 10px;font-size:14px;font-family:var(--mono);color:var(--text)}
+  .panel table{min-width:0;font-size:13px}
+  .panel th,.panel td{padding:8px 8px;border-bottom:1px solid var(--line-soft)}
+  .panel thead th{background:none;padding-left:8px}
+  .panel td:first-child,.panel th:first-child{padding-left:0}
+  .panel td:last-child,.panel th:last-child{padding-right:0}
+  .panel table code{white-space:normal}
+
+  /* 底部 */
+  footer{margin-top:56px;border-top:1px solid var(--line-soft);padding:26px 0 42px;color:var(--dim);font-size:13px}
+  .foot-row{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;justify-content:space-between}
+  .foot-links{display:flex;flex-wrap:wrap;gap:16px}
+  .foot-links a{color:var(--muted)}
+  .mit{font-family:var(--mono);font-size:11.5px;border:1px solid var(--line);padding:3px 8px;border-radius:5px}
+
+  @media(max-width:640px){
+    .wrap{padding:0 16px}
+    .hero{padding:34px 0 20px}
+    section{padding:40px 0 6px}
+    .cmd code{font-size:12px;white-space:pre-wrap;word-break:break-all}
+    .chips li{font-size:11px}
+    table{font-size:12.5px}
+    th,td{padding:9px 11px}
+    .topbar{padding:14px 0}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{transition:none!important;scroll-behavior:auto!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="topbar">
+    <div class="brand"><span class="dot"></span>super-writer</div>
+    <a class="gh-btn" href="https://github.com/xin-ze-jiang/super-writer" target="_blank" rel="noopener">
+      <span>GitHub 仓库</span><span aria-hidden="true">↗</span>
+    </a>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <span class="eyebrow">3 个技能 · 9 个 AI 工具 · MIT</span>
+      <h1>super-writer</h1>
+      <p class="lede">
+        给主流 AI 编程工具用的一组技能：<strong>LaTeX 论文排版</strong>、<strong>赛级 PPT 生成</strong>、<strong>中文 AI 绘画提示词</strong>。
+        每个技能都是自包含目录，复制进去就能用，不需要改代码。
+      </p>
+      <ul class="chips">
+        <li>MIT</li>
+        <li>SKILL.md 标准格式</li>
+        <li>纯本地运行</li>
+        <li>一条命令安装</li>
+        <li>9 个工具通用</li>
+      </ul>
+
+      <div class="cmd">
+        <div class="cmd-head"><span>Windows · PowerShell</span><span>在任意目录执行</span></div>
+        <div class="cmd-body">
+          <code id="cmd-win">git clone https://github.com/xin-ze-jiang/super-writer.git
+cd super-writer
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Target auto</code>
+          <button class="copy" data-copy="cmd-win" type="button">复制</button>
+        </div>
+      </div>
+
+      <div class="cmd">
+        <div class="cmd-head"><span>macOS / Linux · Bash</span><span>在任意目录执行</span></div>
+        <div class="cmd-body">
+          <code id="cmd-unix">git clone https://github.com/xin-ze-jiang/super-writer.git && cd super-writer && ./install.sh --target auto</code>
+          <button class="copy" data-copy="cmd-unix" type="button">复制</button>
+        </div>
+      </div>
+
+      <p class="note">
+        <code>-Target auto</code> 只装检测到的工具；要全装用 <code>all</code>，也可指定 <code>claude,cursor</code> 等。
+        重复执行原地覆盖，不会产生重复目录。
+      </p>
+    </section>
+
+    <section id="skills">
+      <div class="sec-head"><span class="sec-num">01</span><h2>三个技能</h2></div>
+      <p class="sec-desc">技能靠 <code>SKILL.md</code> 的 description 匹配，用日常说法就能触发，也可以直接输入斜杠命令。</p>
+
+      <div class="cards">
+        <article class="card">
+          <div class="card-top"><div class="icon">T<sub>E</sub>X</div><h3>latex-paper</h3></div>
+          <p>LaTeX 论文排版：10 套现成模板，选题材、复制、改内容，一条命令跑完 XeLaTeX + bibtex/biber 出 PDF。</p>
+          <ul>
+            <li>中文课程论文、实验报告、作业、数模国赛、本科毕业论文</li>
+            <li>IEEE / ACM 会议、美赛（MCM/ICM）</li>
+            <li>Elsevier 与 IEEE 期刊投稿</li>
+            <li>顺带排查 LaTeX 报错、改字号与页边距</li>
+          </ul>
+          <div class="trigger">试试说：<span>把这份实验报告排成 PDF</span></div>
+        </article>
+
+        <article class="card">
+          <div class="card-top"><div class="icon">▤</div><h3>sj-ppt</h3></div>
+          <p>赛级 PPT 生产线：把内容写进一个 <code>deck.json</code>，同时生成单文件 HTML 演示和可编辑 .pptx。</p>
+          <ul>
+            <li>一套内容源，两版交付</li>
+            <li>内置 5 套风格，数字滚动、柱状生长、逐项入场动效</li>
+            <li>自带静态检查：溢出、缺字段、字号过小</li>
+            <li>适合答辩、大创汇报、课程汇报</li>
+          </ul>
+          <div class="trigger">试试说：<span>用 sj-ppt 做一个 12 页答辩 PPT</span></div>
+        </article>
+
+        <article class="card">
+          <div class="card-top"><div class="icon">✎</div><h3>promptlab</h3></div>
+          <p>中文 AI 绘画提示词工坊：按七段式写提示词，用锚点保证系列图一致，自带自检脚本。</p>
+          <ul>
+            <li>主体 → 动作构图 → 镜头 → 光线 → 材质风格 → 氛围 → 画幅</li>
+            <li>角色卡 / 世界卡，跨图保持一致</li>
+            <li>自检空话、维度冲突、画幅缺失</li>
+            <li>概念图、角色三视图、绘本分镜</li>
+          </ul>
+          <div class="trigger">试试说：<span>帮我写/改一条即梦提示词</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="tools">
+      <div class="sec-head"><span class="sec-num">02</span><h2>支持的工具</h2></div>
+      <p class="sec-desc">8 个工具原生读 <code>SKILL.md</code> 目录，Codex 以 <code>AGENTS.md</code> 为主、脚本会额外追加索引。安装动作就是复制整个技能目录。</p>
+
+      <div class="table-wrap">
+        <table>
+          <caption>用户级安装路径（Windows 为 <code>%USERPROFILE%</code> 下的同名目录）</caption>
+          <thead>
+            <tr><th>工具</th><th>技能目录</th><th>方式</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="tool">Claude Code</td><td><code>~/.claude/skills/&lt;技能名&gt;/</code></td><td>脚本</td></tr>
+            <tr><td class="tool">Trae</td><td><code>~/.trae-cn/skills/&lt;技能名&gt;/</code>（国际版 <code>~/.trae/skills/</code>）</td><td>脚本</td></tr>
+            <tr><td class="tool">Cursor</td><td><code>~/.cursor/skills/&lt;技能名&gt;/</code></td><td>脚本</td></tr>
+            <tr><td class="tool">Codex CLI</td><td><code>~/.agents/skills/&lt;技能名&gt;/</code> + 追加 <code>~/.codex/AGENTS.md</code></td><td>脚本</td></tr>
+            <tr><td class="tool">Cline</td><td><code>~/.cline/skills/&lt;技能名&gt;/</code></td><td>脚本</td></tr>
+            <tr><td class="tool">Gemini CLI</td><td><code>~/.gemini/skills/&lt;技能名&gt;/</code></td><td>脚本</td></tr>
+            <tr><td class="tool">GitHub Copilot</td><td><code>~/.copilot/skills/&lt;技能名&gt;/</code></td><td>脚本</td></tr>
+            <tr><td class="tool">Windsurf</td><td><code>~/.codeium/windsurf/skills/&lt;技能名&gt;/</code></td><td>脚本</td></tr>
+            <tr><td class="tool">DeepSeek Harness</td><td><code>~/.agents/skills/&lt;技能名&gt;/</code><br><span class="tag shared">与 Codex 共用，装一份即可</span></td><td>脚本</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="deps">
+      <div class="sec-head"><span class="sec-num">03</span><h2>依赖与常见坑</h2></div>
+      <p class="sec-desc">三个技能互不依赖，可以只装其中一个。跑不动时先对照下表。</p>
+
+      <div class="two-col">
+        <div class="panel">
+          <h3>依赖</h3>
+          <table>
+            <thead><tr><th>依赖</th><th>用在哪</th><th>缺了会怎样</th></tr></thead>
+            <tbody>
+              <tr><td>TeX Live 2026 完整版</td><td>latex-paper</td><td>编译直接失败</td></tr>
+              <tr><td><code>xelatex</code> / <code>bibtex</code> / <code>biber</code> 在 PATH</td><td>latex-paper</td><td>报找不到命令</td></tr>
+              <tr><td>PowerShell 5.1+</td><td>latex-paper 的 <code>build.ps1</code></td><td>脚本跑不起来</td></tr>
+              <tr><td>Node.js 18+</td><td>sj-ppt 生成 HTML</td><td>报 <code>node: command not found</code></td></tr>
+              <tr><td>Python 3.8+</td><td>sj-ppt 生成 pptx；promptlab 自检</td><td>脚本无法启动</td></tr>
+              <tr><td><code>python-pptx</code>、<code>lxml</code></td><td>sj-ppt 生成 pptx</td><td><code>ModuleNotFoundError</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <h3>常见坑</h3>
+          <table>
+            <thead><tr><th>现象</th><th>原因 / 处理</th></tr></thead>
+            <tbody>
+              <tr><td>技能装了不生效</td><td>多套了一层目录，<code>SKILL.md</code> 必须在技能目录根</td></tr>
+              <tr><td><code>xelatex</code> 不是命令</td><td>TeX Live 的 bin 目录没进 PATH</td></tr>
+              <tr><td>中文乱码 / 缺字</td><td><code>.tex</code> 存成 UTF-8；<code>.ps1</code> 要 UTF-8 带 BOM</td></tr>
+              <tr><td>参考文献显示 <code>[?]</code></td><td>没跑 bibtex/biber，或 <code>refs.bib</code> 里没有对应 key</td></tr>
+              <tr><td><code>deck.json</code> 解析失败</td><td>文件带 BOM 或存成 GBK，用 UTF-8 重存</td></tr>
+              <tr><td>pptx 提示「需要修复」</td><td>只改 <code>deck.json</code> 再重新生成，别手改 pptx</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="foot-row">
+      <div class="foot-links">
+        <a href="https://github.com/xin-ze-jiang/super-writer" target="_blank" rel="noopener">GitHub 仓库 ↗</a>
+        <a href="https://github.com/xin-ze-jiang/super-writer/blob/main/README.md" target="_blank" rel="noopener">完整使用说明</a>
+        <a href="https://github.com/xin-ze-jiang/super-writer/blob/main/docs/cross-tool-support.md" target="_blank" rel="noopener">跨工具支持（含来源）</a>
+      </div>
+      <span class="mit">MIT License</span>
+    </div>
+    <p style="margin:14px 0 0">三个技能都是普通目录：README、模板、脚本都在仓库里，不装技能也能直接拿来用。</p>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.copy'), function (btn) {
+    btn.addEventListener('click', function () {
+      var id = btn.getAttribute('data-copy');
+      var target = document.getElementById(id);
+      if (!target) return;
+      var text = target.textContent.trim();
+      var old = btn.textContent;
+      function done(ok) {
+        btn.textContent = ok ? '已复制' : '复制失败';
+        btn.classList.toggle('done', ok);
+        setTimeout(function () {
+          btn.textContent = old;
+          btn.classList.remove('done');
+        }, 1600);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(fallbackCopy(text)); });
+      } else {
+        done(fallbackCopy(text));
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
