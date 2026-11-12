@@ -1,5 +1,5 @@
 ---
-description: super-writer 的三个技能（latex-paper、promptlab、sj-ppt）：LaTeX 论文排版、赛级 PPT 生成、中文 AI 绘画提示词。需要排版论文/做答辩 PPT/写绘图提示词时按需读取对应技能目录下的 SKILL.md。
+description: super-writer 的技能（coordinate-plot、latex-paper、promptlab、sj-ppt）：LaTeX 论文排版、赛级 PPT 生成、中文 AI 绘画提示词、坐标纸出图。需要排版论文/做答辩 PPT/写绘图提示词/画实验数据图时按需读取对应技能目录下的 SKILL.md。
 alwaysApply: false
 ---
 
@@ -11,6 +11,16 @@ alwaysApply: false
 放置：项目级 `.cursor/rules/super-writer.mdc`（仅 `.mdc` 会被识别）。
 
 技能目录放在项目 `.cursor/skills/` 或用户级 `~/.cursor/skills/`（Cursor 原生支持 SKILL.md）。
+
+### coordinate-plot
+
+- **什么时候用**：把实验数据画成毫米方格纸（坐标纸）风格的曲线图，打印后照着在纸质坐标纸上手绘。支持折线直连、平滑曲线、线性拟合（带斜率截距标注）、只画散点；支持 1~2 个上下排列子图；黑白打印友好；中文轴标签与单位；默认 300dpi PNG。适用于"坐标纸出图""毫米方格""手绘参照""分布曲线图""实验数据出图"等需求。
+- **技能目录名**：`coordinate-plot`（目录内 `SKILL.md` 是完整说明，先读它再动手）
+- **关键命令**：
+  - `python scripts/plot.py --csv examples/demo_spring.csv --x 0 --y 1 --mode fit --out 弹簧.png`
+  - `python scripts/plot.py --csv examples/demo_spring.csv --x 0 --y 1 --mode fit \`
+  - `python scripts/plot.py ...`
+- **产物**：对话内直接产出，无文件产物
 
 ### latex-paper
 

@@ -126,7 +126,7 @@ def build_files(skills):
 
     out["cursor/super-writer.mdc"] = (
         "---\n"
-        "description: super-writer 的三个技能（%s）：LaTeX 论文排版、赛级 PPT 生成、中文 AI 绘画提示词。需要排版论文/做答辩 PPT/写绘图提示词时按需读取对应技能目录下的 SKILL.md。\n"
+        "description: super-writer 的技能（%s）：LaTeX 论文排版、赛级 PPT 生成、中文 AI 绘画提示词、坐标纸出图。需要排版论文/做答辩 PPT/写绘图提示词/画实验数据图时按需读取对应技能目录下的 SKILL.md。\n"
         "alwaysApply: false\n"
         "---\n\n" % names
     ) + (

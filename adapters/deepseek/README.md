@@ -19,6 +19,16 @@ frontmatter 只要求 `name`（kebab-case）+ `description`，与现有 `SKILL.m
 
 验证：`npx @deepseek-ai/dsh web` 启动后，在 `/` 命令面板的 Skills 组里应能看到下列技能。
 
+### coordinate-plot
+
+- **什么时候用**：把实验数据画成毫米方格纸（坐标纸）风格的曲线图，打印后照着在纸质坐标纸上手绘。支持折线直连、平滑曲线、线性拟合（带斜率截距标注）、只画散点；支持 1~2 个上下排列子图；黑白打印友好；中文轴标签与单位；默认 300dpi PNG。适用于"坐标纸出图""毫米方格""手绘参照""分布曲线图""实验数据出图"等需求。
+- **技能目录名**：`coordinate-plot`（目录内 `SKILL.md` 是完整说明，先读它再动手）
+- **关键命令**：
+  - `python scripts/plot.py --csv examples/demo_spring.csv --x 0 --y 1 --mode fit --out 弹簧.png`
+  - `python scripts/plot.py --csv examples/demo_spring.csv --x 0 --y 1 --mode fit \`
+  - `python scripts/plot.py ...`
+- **产物**：对话内直接产出，无文件产物
+
 ### latex-paper
 
 - **什么时候用**：中文课程论文、实验报告、平时作业、数学建模国赛（CUMCM）、本科毕业论文、IEEE / ACM 英文会议论文、MCM/ICM 美赛、Elsevier / IEEE 期刊投稿初稿；任何"把内容排成论文/报告 PDF"的需求；LaTeX 报错排查；改字号、页边距、行距、字体、参考文献样式。

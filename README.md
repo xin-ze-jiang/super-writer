@@ -1,6 +1,6 @@
 # super-writer
 
-给主流 AI 编程工具用的一组技能：LaTeX 论文排版、赛级 PPT 生成、中文 AI 绘画提示词。每个技能都是自包含目录，复制进去就能用。
+给主流 AI 编程工具用的一组技能：LaTeX 论文排版、赛级 PPT 生成、中文 AI 绘画提示词、坐标纸出图。每个技能都是自包含目录，复制进去就能用。
 
 宣传页（GitHub Pages）：<https://xin-ze-jiang.github.io/super-writer/>
 
@@ -11,8 +11,9 @@
 | [latex-paper](skills/latex-paper/) | LaTeX 论文排版。10 套现成模板：中文课程论文、实验报告、作业、数模国赛、本科毕业论文、IEEE/ACM 会议、美赛、Elsevier 期刊、IEEE 期刊；一条命令跑完 XeLaTeX + bibtex/biber | TeX Live（`xelatex`/`bibtex`/`biber` 在 PATH）、PowerShell 5.1+ | PDF（+ 编译日志 `.log`） |
 | [sj-ppt](skills/sj-ppt/) | 赛级 PPT 生产线。一份 `deck.json` 同时生成单文件 HTML 演示版和可编辑 `.pptx` | Node.js 18+；生成 pptx 另需 Python 3.8+ 与 `python-pptx`、`lxml` | `out/index.html` + `out/*.pptx` |
 | [promptlab](skills/promptlab/) | 中文 AI 绘画提示词工坊。七段式写提示词、用锚点保证系列图一致，自带自检脚本 | Python 3.8+（只用标准库） | 提示词文本 + 设定卡（对话内交付） |
+| [coordinate-plot](skills/coordinate-plot/) | 坐标纸出图。把实验数据画成 1mm 真实毫米格的曲线图，供打印后手绘；支持折线/平滑/线性拟合/散点、上下 1~2 子图、黑白打印 | Python 3.8+、`matplotlib` | 300dpi PNG |
 
-三个技能互不依赖，可以只装其中一个。
+四个技能互不依赖，可以只装其中一个。
 
 ## 2. 安装
 
@@ -46,12 +47,12 @@ mkdir -p ~/.claude/skills
 cp -R skills/latex-paper ~/.claude/skills/
 ```
 
-三个都装：
+四个都装：
 
 ```powershell
 # Windows
 New-Item -ItemType Directory -Force "$HOME\.claude\skills" | Out-Null
-'latex-paper','sj-ppt','promptlab' | ForEach-Object {
+'latex-paper','sj-ppt','promptlab','coordinate-plot' | ForEach-Object {
   Copy-Item -Recurse ".\skills\$_" "$HOME\.claude\skills\" -Force
 }
 ```
@@ -59,7 +60,7 @@ New-Item -ItemType Directory -Force "$HOME\.claude\skills" | Out-Null
 ```bash
 # macOS / Linux
 mkdir -p ~/.claude/skills
-cp -R skills/latex-paper skills/sj-ppt skills/promptlab ~/.claude/skills/
+cp -R skills/latex-paper skills/sj-ppt skills/promptlab skills/coordinate-plot ~/.claude/skills/
 ```
 
 装完检查一下（`SKILL.md` 必须直接在技能目录根下，不能多套一层）：
@@ -135,6 +136,7 @@ python scripts/gen-adapters.py --check   # 只检查是否过期
 | 把实验报告排成 PDF / 帮我排一篇课程论文 / 这份 LaTeX 报 Undefined control sequence / 页边距改成 2.5 cm / 毕业论文模板 | latex-paper |
 | 做个 4 页汇报 PPT / 大创答辩 PPT / 要能动又有 pptx 版本 / 这组数据做成柱状图页 | sj-ppt |
 | 帮我改这段提示词 / 写个即梦提示词 / 角色三视图要长得一样 / 绘本分镜 | promptlab |
+| 这组数据画成坐标纸 / 毫米方格图打印出来手绘 / 实验数据出图要能照着描 | coordinate-plot |
 
 ### 手动指定
 
@@ -144,6 +146,7 @@ python scripts/gen-adapters.py --check   # 只检查是否过期
 /latex-paper
 /sj-ppt
 /promptlab
+/coordinate-plot
 ```
 
 ## 5. 每个技能怎么用
@@ -222,6 +225,23 @@ python scripts/check_prompt.py --lang zh < prompt.txt
 
 **需要你提供**：画幅（竖版 3:4 / 方图 1:1 / 横版 16:9）、目标工具（默认即梦）、数量（单图 / 系列几张 / 绘本几页），以及主体是谁、在做什么。
 
+### 5.4 coordinate-plot
+
+**能做什么**：把实验数据画成物理尺寸真实的毫米方格纸图（1mm 细格 / 5mm 中格 / 10mm 粗格），打印后照着数格子往纸质坐标纸上抄。四种画法：折线直连 / 平滑曲线 / 线性拟合（标斜率、截距、R²）/ 只画散点；支持上下 1~2 个子图、多列叠画、中文轴标签与单位、黑白打印优先，默认 300dpi PNG。
+
+**最小可用命令**（`$Skill` 指技能安装目录）：
+
+```bash
+cd "$HOME/.claude/skills/coordinate-plot"
+python scripts/plot.py --csv examples/demo_spring.csv --x 0 --y 1 --mode fit --out 弹簧.png
+```
+
+Windows 也可以直接双击 `examples\run_example.bat`，示例图输出到 `output\`。macOS / Linux 没有 `.bat`，跑上面的 `python` 命令即可。
+
+**产物**：PNG（省略 `--out` 时落在 CSV 同目录）。
+
+**需要你提供**：数据文件、x/y 各是哪一列、要不要拟合线、几个子图、坐标轴范围与每大格代表多少、轴标签（含单位）。
+
 ## 6. 依赖与安装
 
 | 依赖 | 版本 | 用在哪 | 缺了会怎样 |
@@ -230,8 +250,9 @@ python scripts/check_prompt.py --lang zh < prompt.txt
 | `xelatex` / `bibtex` / `biber` 在 PATH | 随 TeX Live | latex-paper | 装了 TeX Live 但没进 PATH 同样报找不到命令（Windows 默认路径形如 `D:\texlive\2026\bin\windows`） |
 | PowerShell | 5.1+ | latex-paper 的 `build.ps1` | 脚本跑不起来。macOS/Linux 需装 `pwsh`，或改用第 7 节的手动编译命令 |
 | Node.js | 18+ | sj-ppt 生成 HTML | `node: command not found`；`build_html.mjs` 用 ESM，低于 18 会报语法错 |
-| Python | 3.8+ | sj-ppt 生成 pptx；promptlab 自检 | 脚本无法启动 |
+| Python | 3.8+ | sj-ppt 生成 pptx；promptlab 自检；coordinate-plot 出图 | 脚本无法启动 |
 | `python-pptx`、`lxml` | 最新 | sj-ppt 生成 pptx | `ModuleNotFoundError: No module named 'pptx'`。pip 装即可 |
+| `matplotlib` | 3.5+ | coordinate-plot 出图 | `ModuleNotFoundError: No module named 'matplotlib'`；`pip install matplotlib` 即可，中文缺字会变方块并打印 `[warn]` |
 
 PATH 临时补法（不想改系统环境变量时，当前窗口有效）：
 
@@ -257,7 +278,7 @@ xelatex main.tex
 
 `main.pdf` 就是成品。目录里还需要有 `refs.bib`，缺了参考文献会显示 `[?]`。
 
-sj-ppt 的两个脚本也是普通命令行程序，`node scripts/build_html.mjs 你的deck.json 输出.html` 即可，不必经过对话。promptlab 的 `check_prompt.py` 同样可以单独跑。
+sj-ppt 的两个脚本也是普通命令行程序，`node scripts/build_html.mjs 你的deck.json 输出.html` 即可，不必经过对话。promptlab 的 `check_prompt.py`、coordinate-plot 的 `scripts/plot.py` 同样可以单独跑。
 
 ## 8. 更新方式
 
@@ -269,15 +290,16 @@ cd D:\tools\super-writer
 git pull
 
 # 2) 重新覆盖复制一次（Windows 用 robocopy，/E 表示含子目录，会覆盖旧文件）
-robocopy .\skills\latex-paper "$HOME\.claude\skills\latex-paper" /E
-robocopy .\skills\sj-ppt      "$HOME\.claude\skills\sj-ppt"      /E
-robocopy .\skills\promptlab   "$HOME\.claude\skills\promptlab"   /E
+robocopy .\skills\latex-paper     "$HOME\.claude\skills\latex-paper"     /E
+robocopy .\skills\sj-ppt          "$HOME\.claude\skills\sj-ppt"          /E
+robocopy .\skills\promptlab       "$HOME\.claude\skills\promptlab"       /E
+robocopy .\skills\coordinate-plot "$HOME\.claude\skills\coordinate-plot" /E
 ```
 
 ```bash
 # macOS / Linux
 cd ~/tools/super-writer && git pull
-cp -Rf skills/latex-paper skills/sj-ppt skills/promptlab ~/.claude/skills/
+cp -Rf skills/latex-paper skills/sj-ppt skills/promptlab skills/coordinate-plot ~/.claude/skills/
 ```
 
 复制完开新对话生效。注意 `cp -R` 不会删掉旧版本里已删除的文件，要彻底干净就先删技能目录再复制。
@@ -286,7 +308,7 @@ cp -Rf skills/latex-paper skills/sj-ppt skills/promptlab ~/.claude/skills/
 
 | 现象 | 原因 | 处理 |
 |---|---|---|
-| 技能装了但完全不生效 | 多套了一层目录，比如 `skills/latex-paper/latex-paper/SKILL.md` | `SKILL.md` 必须在技能目录根；目录名要与 `SKILL.md` 里的 `name` 一致（`latex-paper` / `sj-ppt` / `promptlab`） |
+| 技能装了但完全不生效 | 多套了一层目录，比如 `skills/latex-paper/latex-paper/SKILL.md` | `SKILL.md` 必须在技能目录根；目录名要与 `SKILL.md` 里的 `name` 一致（`latex-paper` / `sj-ppt` / `promptlab` / `coordinate-plot`） |
 | `xelatex: 无法将...识别为 cmdlet` | TeX Live 的 bin 目录没进 PATH | 用第 5 节的 `$env:PATH` 临时补，或把 `D:\texlive\2026\bin\windows` 加进系统环境变量 |
 | 编译报 `Font "SimSun" not found` 之类 | 模板字体集已按平台自动判断（Windows→`windows`，macOS→`mac`，其他→`fandol`），正常不会出现 | 已自动判断，无需手动改；若仍报错，多半是系统缺字体或自己改过 `main.tex` 开头的检测块，可显式写 `fontset=fandol`（TeX Live 自带） |
 | 中文全是乱码或 `Missing character` | `.tex` 存成了 GBK | 统一存 UTF-8（无 BOM）；`.ps1` 脚本相反，要 UTF-8 **带 BOM** |
@@ -324,13 +346,17 @@ super-writer/
    │  ├─ SKILL.md
    │  ├─ scripts/             # build_html.mjs、build_pptx.py、check.mjs
    │  └─ examples/            # deck.json 示例
-   └─ promptlab/
+   ├─ promptlab/
+   │  ├─ SKILL.md
+   │  ├─ USAGE.md
+   │  ├─ references/          # 电影感、一致性、方法、动效、视觉词库
+   │  ├─ templates/           # 角色 / 场景 / 绘本 / 3D 四类设定卡
+   │  ├─ scripts/check_prompt.py
+   │  └─ examples/
+   └─ coordinate-plot/
       ├─ SKILL.md
-      ├─ USAGE.md
-      ├─ references/          # 电影感、一致性、方法、动效、视觉词库
-      ├─ templates/           # 角色 / 场景 / 绘本 / 3D 四类设定卡
-      ├─ scripts/check_prompt.py
-      └─ examples/
+      ├─ scripts/plot.py      # 出图主程序（matplotlib）
+      └─ examples/            # demo_spring.csv、demo_rtd.csv、run_example.bat（Windows）
 ```
 
 编译与生成产物（`output/`、`out/`、`*.pdf`、`*.aux`、`__pycache__/` 等）已写入 `.gitignore`，不会进仓库。

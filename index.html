@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
@@ -211,7 +211,7 @@
 
   <main>
     <section class="hero" id="top">
-      <span class="eyebrow">3 个技能 · 9 个 AI 工具 · MIT</span>
+      <span class="eyebrow">4 个技能 · 9 个 AI 工具 · MIT</span>
       <h1>super-writer</h1>
       <p class="lede">
         给主流 AI 编程工具用的一组技能：<strong>LaTeX 论文排版</strong>、<strong>赛级 PPT 生成</strong>、<strong>中文 AI 绘画提示词</strong>。
@@ -250,7 +250,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Target auto</
     </section>
 
     <section id="skills">
-      <div class="sec-head"><span class="sec-num">01</span><h2>三个技能</h2></div>
+      <div class="sec-head"><span class="sec-num">01</span><h2>四个技能</h2></div>
       <p class="sec-desc">技能靠 <code>SKILL.md</code> 的 description 匹配，用日常说法就能触发，也可以直接输入斜杠命令。</p>
 
       <div class="cards">
@@ -289,6 +289,17 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Target auto</
           </ul>
           <div class="trigger">试试说：<span>帮我写/改一条即梦提示词</span></div>
         </article>
+        <article class="card">
+          <div class="card-top"><div class="icon">▦</div><h3>coordinate-plot</h3></div>
+          <p>坐标纸出图：把实验数据画成 1mm 真实毫米格的曲线图，打印后照着数格子往纸质坐标纸上手绘。</p>
+          <ul>
+            <li>1mm 细格 / 5mm 中格 / 10mm 粗格，网格与刻度同源</li>
+            <li>折线 / 平滑 / 线性拟合（标斜率、截距、R²）/ 散点</li>
+            <li>上下 1~2 个子图，多列叠画，中文轴标签与单位</li>
+            <li>黑白打印优先，300dpi PNG，打印选「实际大小」即真毫米</li>
+          </ul>
+          <div class="trigger">试试说：<span>把这组实验数据画成坐标纸图</span></div>
+        </article>
       </div>
     </section>
 
@@ -319,7 +330,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Target auto</
 
     <section id="deps">
       <div class="sec-head"><span class="sec-num">03</span><h2>依赖与常见坑</h2></div>
-      <p class="sec-desc">三个技能互不依赖，可以只装其中一个。跑不动时先对照下表。</p>
+      <p class="sec-desc">四个技能互不依赖，可以只装其中一个。跑不动时先对照下表。</p>
 
       <div class="two-col">
         <div class="panel">
@@ -331,8 +342,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Target auto</
               <tr><td><code>xelatex</code> / <code>bibtex</code> / <code>biber</code> 在 PATH</td><td>latex-paper</td><td>报找不到命令</td></tr>
               <tr><td>PowerShell 5.1+</td><td>latex-paper 的 <code>build.ps1</code></td><td>脚本跑不起来</td></tr>
               <tr><td>Node.js 18+</td><td>sj-ppt 生成 HTML</td><td>报 <code>node: command not found</code></td></tr>
-              <tr><td>Python 3.8+</td><td>sj-ppt 生成 pptx；promptlab 自检</td><td>脚本无法启动</td></tr>
+              <tr><td>Python 3.8+</td><td>sj-ppt 生成 pptx；promptlab 自检；coordinate-plot 出图</td><td>脚本无法启动</td></tr>
               <tr><td><code>python-pptx</code>、<code>lxml</code></td><td>sj-ppt 生成 pptx</td><td><code>ModuleNotFoundError</code></td></tr>
+              <tr><td><code>matplotlib</code></td><td>coordinate-plot 出图</td><td>导入报错，无法出图；中文缺字会变方块</td></tr>
             </tbody>
           </table>
         </div>
@@ -364,7 +376,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Target auto</
       </div>
       <span class="mit">MIT License</span>
     </div>
-    <p style="margin:14px 0 0">三个技能都是普通目录：README、模板、脚本都在仓库里，不装技能也能直接拿来用。</p>
+    <p style="margin:14px 0 0">四个技能都是普通目录：README、模板、脚本都在仓库里，不装技能也能直接拿来用。</p>
   </footer>
 
 </div>

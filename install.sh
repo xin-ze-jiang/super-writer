@@ -85,6 +85,7 @@ trigger_for() {
     latex-paper) echo "「把这份实验报告排成 PDF」或「用 latex-paper 编译这个 .tex」" ;;
     sj-ppt) echo "「用 sj-ppt 做一个 12 页答辩 PPT」" ;;
     promptlab) echo "「帮我写/改一条即梦提示词」" ;;
+    coordinate-plot) echo "「把这组实验数据画成坐标纸图」" ;;
     *) echo "" ;;
   esac
 }
